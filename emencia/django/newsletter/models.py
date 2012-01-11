@@ -49,6 +49,7 @@ class SMTPServer(models.Model):
                                help_text=_('key1: value1 key2: value2, splitted by return line.\n'\
                                            'Useful for passing some tracking headers if your provider allows it.'))
     mails_hour = models.IntegerField(_('mails per hour'), default=0)
+    emails_remains = models.IntegerField(_('email remains'), default=MAILER_HARD_LIMIT)
 
     def connect(self):
         """Connect the SMTP Server"""
@@ -65,7 +66,7 @@ class SMTPServer(models.Model):
     def credits(self):
         """Return how many mails the server can send"""
         if not self.mails_hour:
-            return MAILER_HARD_LIMIT
+            return self.emails_remains
 
         last_hour = datetime.now() - timedelta(hours=1)
         sent_last_hour = ContactMailingStatus.objects.filter(

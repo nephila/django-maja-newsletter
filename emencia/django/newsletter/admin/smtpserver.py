@@ -33,7 +33,7 @@ class SMTPServerAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('name', )}),
                  (_('Configuration'), {'fields': ('host', 'port',
                                                   'user', 'password', 'tls')}),
-                 (_('Miscellaneous'), {'fields': ('mails_hour', 'headers'),
+                 (_('Miscellaneous'), {'fields': ('mails_hour', 'emails_remains','headers'),
                                        'classes': ('collapse', )}),
                  )
     actions = ['check_connections']

@@ -150,11 +150,23 @@ class BaseNewsletterAdmin(admin.ModelAdmin):
 
     def make_ready_to_send(self, request, queryset):
         """Make newsletter ready to send"""
+        from django.contrib import messages
         queryset = queryset.filter(status=Newsletter.DRAFT)
+        emails_to_send = 0
+        sent_all = True
         for newsletter in queryset:
+            emails_to_send += len(newsletter.mailing_list.expedition_set())
+            if emails_to_send > newsletter.server.emails_remains:
+                messages.warning(request, _('You do not have enough e-mail'))
+                sent_all = False
+                break
             newsletter.status = Newsletter.WAITING
+            newsletter.server.emails_remains = newsletter.server.emails_remains - emails_to_send
+            newsletter.server.save()
             newsletter.save()
-        self.message_user(request, _('%s newletters are ready to send') % queryset.count())
+        if sent_all:
+            messages.success(request, _('%s newletters are ready to send') % queryset.count())
+        # self.message_user(request, message)
     make_ready_to_send.short_description = _('Make ready to send')
 
     def make_cancel_sending(self, request, queryset):
