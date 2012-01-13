@@ -9,3 +9,4 @@ urlpatterns = patterns('',
                        url(r'^statistics/', include('emencia.django.newsletter.urls.statistics')),
                        url(r'^', include('emencia.django.newsletter.urls.newsletter')),
                        )
+
