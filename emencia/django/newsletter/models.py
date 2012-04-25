@@ -39,17 +39,19 @@ class SMTPServer(models.Model):
     name = models.CharField(_('name'), max_length=255)
     host = models.CharField(_('server host'), max_length=255)
     user = models.CharField(_('server user'), max_length=128, blank=True,
-                            help_text=_('Leave it empty if the host is public.'))
+                            help_text=_('Leave empty if the host is public.'))
     password = models.CharField(_('server password'), max_length=128, blank=True,
-                                help_text=_('Leave it empty if the host is public.'))
+                                help_text=_('Leave empty if the host is public.'))
     port = models.IntegerField(_('server port'), default=25)
     tls = models.BooleanField(_('server use TLS'))
 
     headers = models.TextField(_('custom headers'), blank=True,
                                help_text=_('key1: value1 key2: value2, splitted by return line.\n'\
                                            'Useful for passing some tracking headers if your provider allows it.'))
-    mails_hour = models.IntegerField(_('mails per hour'), default=0)
-    emails_remains = models.IntegerField(_('email remains'), default=MAILER_HARD_LIMIT)
+    mails_hour = models.IntegerField(_('e-mail send rate'), help_text=_("E-Mail sending rate in messages per hour"),
+                                     default=0)
+    emails_remains = models.IntegerField(_('remaining e-mail'), help_text=_("Sendable E-Mail in the current account"),
+                                         default=MAILER_HARD_LIMIT)
 
     def connect(self):
         """Connect the SMTP Server"""
