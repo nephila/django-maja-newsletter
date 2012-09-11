@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Emencia Django Newsletter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-25 12:28+0200\n"
-"PO-Revision-Date: 2012-04-25 12:39+0200\n"
+"POT-Creation-Date: 2012-04-25 12:47+0200\n"
+"PO-Revision-Date: 2012-04-25 12:47+0200\n"
 "Last-Translator: Iacopo Spalletti <i.spalletti@nephila.it>\n"
 "Language-Team: Italian <>\n"
 "Language: it\n"
@@ -483,7 +483,8 @@ msgstr "Invia email di test"
 msgid "You do not have enough e-mail"
 msgstr ""
 "Non sono disponibili abbastanza e-mail per completare l'invio. Si prega di "
-"contattare il commerciale di riferimento per aggiungere un pacchetto di invii."
+"contattare il commerciale di riferimento per aggiungere un pacchetto di "
+"invii."
 
 #: admin/newsletter.py:168
 #, python-format
@@ -558,8 +559,8 @@ msgstr "Azioni"
 
 #: templates/admin/newsletter/contact/change_list.html:51
 #, python-format
-msgid "Import %(name)ss"
-msgstr "Importazione %(name)ss"
+msgid "Import %(name)s"
+msgstr "Importazione %(name)s"
 
 #: templates/admin/newsletter/contact/change_list.html:58
 msgid "Add to a mailing list"
