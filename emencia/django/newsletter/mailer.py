@@ -255,6 +255,8 @@ class Mailer(NewsLetterSender):
             self.smtp_connect()
 
         self.attachments = self.build_attachments()
+        start = datetime.now()
+        delay = self.newsletter.server.delay()
 
         expedition_list = self.expedition_list
 
@@ -280,8 +282,11 @@ class Mailer(NewsLetterSender):
 
             self.update_contact_status(contact, exception)
 
-            if SLEEP_BETWEEN_SENDING:
-                time.sleep(SLEEP_BETWEEN_SENDING)
+            sleep_time = (delay * i -
+                          total_seconds(datetime.now() - start))
+
+            if SLEEP_BETWEEN_SENDING and sleep_time:
+                time.sleep(sleep_time)
             if RESTART_CONNECTION_BETWEEN_SENDING:
                 self.smtp.quit()
                 self.smtp_connect()
