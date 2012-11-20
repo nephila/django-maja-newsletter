@@ -341,7 +341,6 @@ class SMTPMailer(object):
         """send mails
         """
         sending = dict()
-        candidates = self.get_candidates()
         roundrobin = []
 
         if not self.smtp:
@@ -354,6 +353,7 @@ class SMTPMailer(object):
         while (not self.stop_event.wait(sleep_time) and
                not self.stop_event.is_set()):
             if not roundrobin:
+                candidates = self.get_candidates()
                 # refresh the list
                 for expedition in candidates:
                     if expedition.id not in sending and expedition.can_send:
@@ -365,6 +365,9 @@ class SMTPMailer(object):
                 nl_id = roundrobin.pop()
                 nl = sending[nl_id]
 
+                if i == 1:
+                    self.smtp.quit()
+                    self.smtp_connect()
                 try:
                     self.smtp.sendmail(*nl.next())
                 except StopIteration:
@@ -384,7 +387,7 @@ class SMTPMailer(object):
                 i += 1
             else:
                 # no work, sleep a bit and some reset
-                sleep_time = 600
+                sleep_time = 6
                 i = 1
                 self.start = datetime.now()
 
