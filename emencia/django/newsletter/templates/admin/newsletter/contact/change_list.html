@@ -61,12 +61,12 @@ $(document).ready(function() {
   {% endif %}
   {% if user.is_superuser %}
   <li>
-    <a href="export_vcard/{{ cl.get_query_string }}" class="viewsitelink">
+    <a href="export/vcard/{{ cl.get_query_string }}" class="viewsitelink">
       {% blocktrans with cl.opts.verbose_name as name %}Export {{ name }} as VCard{% endblocktrans %}
     </a>
   </li>
   <li>
-    <a href="export_excel/{{ cl.get_query_string }}" class="viewsitelink">
+    <a href="export/excel/{{ cl.get_query_string }}" class="viewsitelink">
       {% blocktrans with cl.opts.verbose_name as name %}Export {{ name }} as Excel{% endblocktrans %}
     </a>
   </li>
