@@ -41,7 +41,7 @@ class BaseNewsletterAdmin(admin.ModelAdmin):
     filter_horizontal = ['test_contacts']
     fieldsets = ((None, {'fields': ('title', 'content',)}),
                  (_('Receivers'), {'fields': ('mailing_list', 'test_contacts',)}),
-                 (_('Sending'), {'fields': ('sending_date', 'status',)}),
+                 (_('Sending'), {'fields': ('sending_date',)}),
                  (_('Miscellaneous'), {'fields': ('server', 'header_sender',
                                                   'header_reply', 'slug'),
                                        'classes': ('collapse',)}),
