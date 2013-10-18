@@ -39,7 +39,8 @@ class ContactAdmin(admin.ModelAdmin):
                  (_('Advanced'), {'fields': ('object_id', 'content_type'),
                                   'classes': ('collapse',)}),
                  )
-    actions = ['create_mailinglist', 'export_vcard', 'export_excel']
+    actions = ['create_mailinglist', 'export_vcard', 'export_excel',
+               'disable_contacts', 'enable_contacts']
     actions_on_top = False
     actions_on_bottom = True
 
@@ -90,6 +91,18 @@ class ContactAdmin(admin.ModelAdmin):
             export_name = 'contacts_edn_%s' % datetime.now().strftime('%d-%m-%Y')
         return ExcelResponse(queryset, export_name)
     export_excel.short_description = _('Export contacts in Excel')
+
+    def disable_contacts(self, request, queryset):
+        """Disable selected contacts"""
+        updated = queryset.update(valid=False)
+        self.message_user(request, _(u'%s contacts disabled') % updated)
+    disable_contacts.short_description = _('Disable contacts')
+
+    def enable_contacts(self, request, queryset):
+        """Enable selected contacts"""
+        updated = queryset.update(valid=True)
+        self.message_user(request, _(u'%s contacts enabled') % updated)
+    enable_contacts.short_description = _('Enable contacts')
 
     def create_mailinglist(self, request, queryset):
         """Create a mailing list from selected contact"""
