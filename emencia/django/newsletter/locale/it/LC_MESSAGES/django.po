@@ -2,22 +2,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Denis Darii <sinednx@gmail.com>, 2011.
-# Iacopo Spalletti <i.spalletti@nephila.it>, 2012.
+# Iacopo Spalletti <i.spalletti@nephila.it>, 2012, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: Emencia Django Newsletter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-25 12:47+0200\n"
-"PO-Revision-Date: 2012-04-25 12:47+0200\n"
+"POT-Creation-Date: 2013-11-24 18:16+0100\n"
+"PO-Revision-Date: 2013-11-24 18:30+0100\n"
 "Last-Translator: Iacopo Spalletti <i.spalletti@nephila.it>\n"
-"Language-Team: Italian <>\n"
+"Language-Team: it <kde-i18n-it@kde.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"X-Generator: Lokalize 1.2\n"
+"X-Generator: Lokalize 1.5\n"
 
 #: forms.py:20
 msgid "Email"
@@ -326,37 +325,55 @@ msgstr "Stato"
 msgid "Advanced"
 msgstr "Avanzate"
 
-#: admin/contact.py:71
+#: admin/contact.py:72
 msgid "No relative object"
 msgstr "Nessun oggetto correlato"
 
-#: admin/contact.py:73
+#: admin/contact.py:74
 msgid "Related object"
 msgstr "Oggetto correlato"
 
-#: admin/contact.py:80
+#: admin/contact.py:81
 msgid "Total subscriptions"
 msgstr "Iscrizioni totali"
 
-#: admin/contact.py:85
+#: admin/contact.py:86
 msgid "Export contacts as VCard"
 msgstr "Esporta i contatti come VCard"
 
-#: admin/contact.py:92
+#: admin/contact.py:93
 msgid "Export contacts in Excel"
 msgstr "Esporta i contatti come Excel"
 
-#: admin/contact.py:97
+#: admin/contact.py:98
+#, python-format
+msgid "%s contacts disabled"
+msgstr "%s contatti disattivati"
+
+#: admin/contact.py:99
+msgid "Disable contacts"
+msgstr "Disattiva contatti"
+
+#: admin/contact.py:104
+#, python-format
+msgid "%s contacts enabled"
+msgstr "%s contatti attivati"
+
+#: admin/contact.py:105
+msgid "Enable contacts"
+msgstr "Attiva contatti"
+
+#: admin/contact.py:110
 #, python-format
 msgid "New mailinglist at %s"
 msgstr "Nuova lista di distribuzione per %s"
 
-#: admin/contact.py:98
+#: admin/contact.py:111
 #, python-format
 msgid "New mailing list created in admin at %s"
 msgstr "Nuova lista di distribuzione creata in amministrazione per %s"
 
-#: admin/contact.py:102
+#: admin/contact.py:115
 msgid ""
 "SQLite3 or a SpatialLite database type detected, please note you will be "
 "limited to 999 contacts per mailing list."
@@ -364,21 +381,21 @@ msgstr ""
 "SQLite3 or a SpatialLite database type detected, please note you will be "
 "limited to 999 contacts per mailing list."
 
-#: admin/contact.py:114
+#: admin/contact.py:127
 #, python-format
 msgid "%s succesfully created."
 msgstr "%s creata con successo."
 
-#: admin/contact.py:117
+#: admin/contact.py:130
 msgid "Create a mailinglist"
 msgstr "Crea una lista di distribuzione"
 
-#: admin/contact.py:136
+#: admin/contact.py:149
 #, python-format
 msgid "%s contacts succesfully imported."
 msgstr "%s contatti importati con successo."
 
-#: admin/contact.py:138
+#: admin/contact.py:151
 msgid "Contact importation"
 msgstr "Importazione contatti"
 
@@ -593,9 +610,8 @@ msgid "Import contacts from a Excel file."
 msgstr "Importa contatti da un file Excel."
 
 #: templates/newsletter/contact_import.html:32
-msgid "Columns are [email][last name][first name][tags]."
-msgstr ""
-"Le colonne sono [email][last name][first name][tags] (senza i simboli [ ])."
+msgid "Columns are [email][first name][last name][tags]."
+msgstr "Le colonne sono [email][nome][cognome][tag] (senza simboli [ ])."
 
 #: templates/newsletter/contact_import.html:33
 #: templates/newsletter/contact_import.html:56
@@ -625,10 +641,10 @@ msgstr "Importa contatti da un file di testo o in formato CSV."
 #: templates/newsletter/contact_import.html:55
 #: templates/newsletter/contact_import.html:97
 msgid ""
-"Columns are [email][last name][first name][tags], splitted by a dot coma."
+"Columns are [email][first name][last name][tags], splitted by a dot coma."
 msgstr ""
-"Le colonne sono [email][last name][first name][tags], separate da punto e "
-"virgola (senza i simboli [ ])."
+"Le colonne sono [email][nome][cognome][tag], separate da punto e "
+"virgola (senza simboli [ ])."
 
 #: templates/newsletter/contact_import.html:73
 msgid "VCard file (.cvf)"
@@ -667,15 +683,19 @@ msgstr "Abbonati"
 msgid "Unsubscription"
 msgstr "Annullamento iscrizione"
 
-#: templates/newsletter/mailing_list_unsubscribe.html:9
+#: templates/newsletter/mailing_list_unsubscribe.html:10
+msgid "You are unsubscribed for all mailing lists."
+msgstr "La tua iscrizione a tutte le liste è stata rimossa."
+
+#: templates/newsletter/mailing_list_unsubscribe.html:12
 msgid "You are unsubscribed for this mailing list."
 msgstr "La tua iscrizione a questa lista è stata rimossa."
 
-#: templates/newsletter/mailing_list_unsubscribe.html:11
+#: templates/newsletter/mailing_list_unsubscribe.html:15
 msgid "Validate this form to unsubscribe to this mailing list."
 msgstr "Conferma questo indirizzo per rimuovere l'iscrizione a questa lista."
 
-#: templates/newsletter/mailing_list_unsubscribe.html:15
+#: templates/newsletter/mailing_list_unsubscribe.html:19
 msgid "Unsubscribe"
 msgstr "Rimuovi l'iscrizione"
 
