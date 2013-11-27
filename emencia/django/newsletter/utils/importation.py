@@ -86,7 +86,8 @@ def text_contacts_import(stream, workgroups=[]):
     for contact_row in contact_reader:
         contact = {}
         for i in range(len(contact_row)):
-            contact[COLUMNS[i]] = contact_row[i]
+            if i < len(COLUMNS):
+                contact[COLUMNS[i]] = contact_row[i]
         contacts.append(contact)
 
     return create_contacts(contacts, 'text', workgroups)
@@ -103,7 +104,8 @@ def excel_contacts_import(stream, workgroups=[]):
         for i in range(len(COLUMNS)):
             try:
                 value = sh.cell(row, i).value
-                contact[COLUMNS[i]] = value
+                if i < len(COLUMNS):
+                    contact[COLUMNS[i]] = value
             except IndexError:
                 break
         contacts.append(contact)
