@@ -87,7 +87,7 @@ def text_contacts_import(stream, workgroups=[]):
         contact = {}
         for i in range(len(contact_row)):
             if i < len(COLUMNS):
-                contact[COLUMNS[i]] = contact_row[i]
+                contact[COLUMNS[i]] = unicode(contact_row[i], "utf-8")
         contacts.append(contact)
 
     return create_contacts(contacts, 'text', workgroups)
