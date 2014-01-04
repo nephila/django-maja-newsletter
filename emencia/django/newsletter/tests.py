@@ -1,6 +1,10 @@
 """Unit tests for emencia.django.newsletter"""
 from datetime import datetime
 from datetime import timedelta
+from django.contrib.sites.models import Site
+from django.template import Context
+from django.template.defaultfilters import slugify
+from emencia.django.newsletter.utils.newsletter import track_links
 from tempfile import NamedTemporaryFile
 
 from django.test import TestCase
@@ -706,3 +710,92 @@ class StatisticsTestCase(TestCase):
                                             contact=self.contacts[0],
                                             status=ContactMailingStatus.OPENED)
         get_newsletter_statistics(self.newsletter)
+
+
+class NewsLetterRenderTest(TestCase):
+    text = '''
+<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0" bgcolor="#eeeff1">
+<tbody>
+<tr>
+<td>
+<table style="width: 604px;" cellspacing="0" cellpadding="0" align="center" bgcolor="#FFFFFF ">
+<tbody>
+<tr>
+<td bgcolor="#FFFFFF " width="600" height="88"><a href="http://hogrefe.it"><img src="http://www.hogrefe.it/media/upload/newsletter-1-registrati/1-news_02.jpg" border="0" alt="HOGREFE EDITORE" width="600" height="88" /></a></td>
+</tr>
+<tr>
+<td style="text-align: right; pagging-bottom: 4px;"><a href="https://www.facebook.com/hogrefe.editore"><img src="http://www.hogrefe.it/media/upload/fb.png" border="0" alt="Facebook" width="25" height="25" /></a>&nbsp;<a href="http://www.linkedin.com/company/hogrefe-editore"><img src="http://www.hogrefe.it/media/upload/linkedin.png" border="0" alt="LinkedIn" width="25" height="25" /></a>&nbsp;<a href="http://www.youtube.com/user/HogrefeEditore"><img src="http://www.hogrefe.it/media/upload/youtube.png" border="0" alt="YouTube" width="25" height="25" /></a></td>
+</tr>
+<tr>
+<td width="600" height="193"><img src="http://www.hogrefe.it/media/upload/img-nl-corsinovembre.png" border="0" alt="Due nuove iniziative formative organizzate da Hogrefe Editore" width="600" height="378" /></td>
+</tr>
+<tr>
+<td style="font-family: Arial, Helvetica, sans-serif; color: #333333; font-size: 14px; line-height: 18px; text-align: justify; padding-top: 10px; padding-right: 30px; padding-bottom: 10px; padding-left: 30px;" colspan="2" bgcolor="#FFFFFF" width="560">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="130">&nbsp;</td>
+<td width="20">&nbsp;</td>
+<td style="font-size: 14px;" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td valign="top" width="130"><img src="http://www.hogrefe.it/media/upload/lifedesign.png" border="0" alt="Life Design &amp; Career Counseling" width="130" height="140" /></td>
+<td width="20">&nbsp;</td>
+<td style="font-size: 14px;" valign="top"><span style="color: #000000;"><strong>Firenze, 29 e 30 novembre 2013</strong></span><br /><br /> <span style="color: #cc0000;"><strong>Life design e Career Counseling: la nuova visione dell'orientamento</strong></span><br /><br /> <span style="color: #000000;"><em>Sede: Fondazione dell'ordine degli Psicologi della Toscana, </em></span>Via Vasco de Gama n. 25 &bull; Firenze<br /><br /><span style="color: #000000;"><em>Docenti: Salvatore Soresi e Laura Nota</em></span><span style="color: #cc0000; font-size: 14px;"><span style="color: #cc0000; font-size: 14px;"></span></span><br /><br /><span style="color: #808080;">L&rsquo;approccio Life Design si propone di fornire gli strumenti per fronteggiare le sfide che sia chi si occupa di career counseling e vocational guidance sia le persone interessate alla loro scelta e progettazione professionale si trovano ad affrontare.<br /><span style="color: #cc0000;"><br /><span style="color: #cc0000;">Per maggiori informazioni e iscrizioni:<br /><a style="color: #cc0000;" href="http://www.fondazionepsicologi.it/images/brochure/life_design_15creditiECM.pdf">CLICCA QUI</a></span></span><br /></span></td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="130"><a href="http://www.hogrefe.it/it/catalogo/test/bambini-e-adolescenti/ados-2-autism-diagnostic-observation-schedule-second-edition/" target="_blank"><img style="border: 1px solid #cccccc;" src="http://www.hogrefe.it/media/upload/cover-ados2-web.png__128x0_q95_crop_upscale.png" border="0" alt="TDI Teate Depression Inventory" width="128" height="182" /></a></td>
+<td width="20">&nbsp;</td>
+<td style="font-size: 14px;" valign="top">
+<div><span style="color: #000000; font-size: 14px;"><strong>Roma, 11 e 12 dicembre 2013<br /></strong></span><br /> <span style="color: #cc0000;"><strong>&ldquo;La Valutazione Diagnostica dell&rsquo;Autismo: i Moduli 1, 2, 3 e 4 di ADOS 2&rdquo;<br /><br /></strong> <span style="color: #000000;"><em>Sede: Istituto di Neuropsichiatria Infantile, Via dei Sabelli, 108 &bull; Roma<br /><br /> Docente: Dott.ssa Raffaella Faggioli.</em></span><br /><br /> <span style="color: #808080;">Il Corso ha lo scopo di promuovere le competenze in tema di diagnosi dell&rsquo;Autismo ed &egrave; rivolto a tutti gli operatori interessati ad acquisire uno strumento diagnostico riconosciuto e validato a livello internazionale ed aggiornato alle modifiche previste dal DSM5.</span><br /> <br /> <span style="color: #cc0000;">Per maggiori informazioni e iscrizioni:<br /><a style="color: #cc0000;" href="http://www.pediatrianpi.it/drupaluni/node/5640">CLICCA QUI</a><br /><br /></span></span></div>
+</td>
+</tr>
+</tbody>
+</table>
+<div>
+<h3 style="text-align: left;"><span style="color: #006cac;">I test di Hogrefe Editore: qualit&agrave; al servizio del professionista che vuole scegliere.</span></h3>
+</div>
+<p><span style="color: #888888;">Per maggiori informazioni:<br /></span><strong><a style="color: #888888;" href="mailto:info@hogrefe.it">info@hogrefe.it</a></strong><br /><strong><span style="color: #888888;">tel. +39 055 5320680</span></strong></p>
+</td>
+</tr>
+<tr>
+<td style="font-family: Arial, Helvetica, sans-serif; color: #ffffff; font-size: 12px; line-height: 18px; padding-top: 10px; padding-right: 30px; padding-bottom: 10px; padding-left: 30px;" align="justify" bgcolor="#787878">
+<div>Hogrefe Editore Srl &bull; V.le A. Gramsci 42 &bull; 50132 Firenze &bull; Tel.: 055 5320680<br /> <a style="color: #ffffff;" href="mailto:info@hogrefe.it"><strong>info@hogrefe.it</strong></a> &bull; <a style="color: #ffffff;" href="http://www.hogrefe.it" target="_blank"><strong>www.hogrefe.it</strong></a> &bull; <a style="color: #ffffff;" href="http://qi.hogrefe.it/" target="_blank"><strong>qi.hogrefe.it</strong></a><br /> CF/P.IVA: 06267580485 &bull; REA: FI &ndash; 614260 &bull; Capitale sociale &euro; 10.000,00<br /> &copy; 2012 &bull; All Rights reserved</div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>'''
+
+    def setUp(self):
+        title = 'Newsletter n. 39 - un nuovo corso ADOS-2 e il seminario life design'
+        self.server = SMTPServer.objects.create(name='Test SMTP',
+                                                host='smtp.domain.com')
+        self.server_2 = SMTPServer.objects.create(name='Test SMTP 2',
+                                                  host='smtp.domain2.com')
+        self.contact = Contact.objects.create(email='scrivi@danielabaggiani.it',
+                                              pk=3)
+        self.mailinglist = MailingList.objects.create(name='prova iacopo')
+        self.mailinglist.subscribers.add(self.contact)
+        self.newsletter = Newsletter.objects.create(title=title,
+                                                    content=self.text,
+                                                    mailing_list=self.mailinglist,
+                                                    server=self.server, slug=slugify(title))
+
+    def test_track_links(self):
+        uidb36, token = tokenize(self.contact)
+        context = Context({'contact': "gino",
+                           'domain': Site.objects.get_current().domain,
+                           'newsletter': self.newsletter,
+                           'tracking_image_format': 'jpg',
+                           'uidb36': uidb36, 'token': token})
+        rendered = track_links(self.text, context)
+        print rendered
