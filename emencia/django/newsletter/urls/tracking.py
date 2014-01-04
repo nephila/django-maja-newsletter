@@ -1,6 +1,6 @@
 """Urls for the emencia.django.newsletter Tracking"""
-from django.conf.urls.defaults import url
-from django.conf.urls.defaults import patterns
+from django.conf.urls import url
+from django.conf.urls import patterns
 
 urlpatterns = patterns('emencia.django.newsletter.views.tracking',
                        url(r'^newsletter/(?P<slug>[-\w]+)/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)\.(?P<format>png|gif|jpg)$',

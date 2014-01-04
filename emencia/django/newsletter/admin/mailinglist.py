@@ -2,8 +2,8 @@
 from datetime import datetime
 
 from django.contrib import admin
-from django.conf.urls.defaults import url
-from django.conf.urls.defaults import patterns
+from django.conf.urls import url
+from django.conf.urls import patterns
 from django.utils.encoding import smart_str
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
