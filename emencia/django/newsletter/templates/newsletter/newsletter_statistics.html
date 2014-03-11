@@ -1,5 +1,6 @@
 {% extends "admin/base_site.html" %}
 {% load i18n %}
+{% load url from future %}
 
 {% block coltype %}colMS{% endblock %}
 
@@ -35,7 +36,7 @@ function save_image() { OFC.jquery.popup('charts_view'); }
 $(document).ready(function(){
   swfobject.embedSWF("{{ STATIC_URL }}edn/swf/open-flash-chart.swf", "charts_view", "498", "350", "9.0.0",
                      "{{ STATIC_URL }}edn/js/swfobject/expressInstall.swf",
-                     {"data-file": "{% url newsletter_newsletter_charts object.slug %}"});
+                     {"data-file": "{% url 'newsletter_newsletter_charts' object.slug %}"});
 
   function reload_charts(charts_data) {
     swfobject.getObjectById("charts_view").load(charts_data);
@@ -65,9 +66,9 @@ $(document).ready(function(){
 {% block breadcrumbs %}
 {% if not is_popup %}
 <div class="breadcrumbs">
-     <a href="{% url admin:index %}">{% trans "Admin." %}</a> &rsaquo;
-     <a href="{% url admin:app_list "newsletter" %}">{{ app_label|capfirst|escape }}</a> &rsaquo;
-     <a href="{% url admin:newsletter_newsletter_changelist %}">{{ opts.verbose_name_plural|capfirst }}</a> &rsaquo;
+     <a href="{% url 'admin:index' %}">{% trans "Admin." %}</a> &rsaquo;
+     <a href="{% url 'admin:app_list'' "newsletter" %}">{{ app_label|capfirst|escape }}</a> &rsaquo;
+     <a href="{% url 'admin:newsletter_newsletter_changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a> &rsaquo;
      {{ title }}
 </div>
 {% endif %}
@@ -81,7 +82,7 @@ $(document).ready(function(){
       <div id="charts_view"></div>
   </div>
   <div class="module" id="charts_options">
-    <form id="period_selector" action="{% url newsletter_newsletter_charts object.slug %}" method="post">
+    <form id="period_selector" action="{% url 'newsletter_newsletter_charts' object.slug %}" method="post">
       {% csrf_token %}
       <table summary="{% trans "Consultation histogram" %}">
 	<tr>
@@ -177,14 +178,14 @@ $(document).ready(function(){
     <div class="module" id="report-module">
       <h2>{% trans "Report" %}</h2>
       <h3>
-	<a href="{% url newsletter_newsletter_report object.slug %}">{% trans "Download CSV report" %}</a>
+	<a href="{% url 'newsletter_newsletter_report' object.slug %}">{% trans "Download CSV report" %}</a>
       </h3>
       <p></p>
     </div>
     <div class="module" id="general-informations-module">
         <h2>{% trans "Informations" %}</h2>
 	<h3>{% trans "Recipients" %}</h3>
-	<p>{{ stats.mails_to_send }} <a href="{% url admin:newsletter_mailinglist_change object.mailing_list.pk %}">{% trans "View" %}</a></p>
+	<p>{{ stats.mails_to_send }} <a href="{% url 'admin:newsletter_mailinglist_change' object.mailing_list.pk %}">{% trans "View" %}</a></p>
         <h3>{% trans "Status" %}</h3>
 	<p>{{ object.get_status_display }} {% if stats.remaining_mails %}<span class="mini quiet">(-{{ stats.remaining_mails }})</span>{% endif %}</p>
 	<h3>{% trans "Sending date" %}</h3>
@@ -196,7 +197,7 @@ $(document).ready(function(){
     </div>
     <div class="module" id="top-links-module">
 	<h2>{% trans "Top Links" %}
-	  (<a href="{% url newsletter_newsletter_density object.slug %}">{% trans "Density map" %}</a>)
+	  (<a href="{% url 'newsletter_newsletter_density' object.slug %}">{% trans "Density map" %}</a>)
 	</h2>
 	<ul class="actionlist">
 	{% for top_link in stats.top_links %}
