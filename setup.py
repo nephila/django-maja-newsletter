@@ -38,5 +38,4 @@ setup(name='emencia.django.newsletter',
                         'vobject',
                         'xlwt',
                         'xlrd',
-                        'django-filebrowser-no-grappelli>3.4',
                         'django-tinymce'])
