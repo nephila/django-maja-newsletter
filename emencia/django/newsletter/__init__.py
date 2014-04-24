@@ -1,8 +1,8 @@
 """emencia.django.newsletter"""
-__version__ = '0.3.dev'
+__version__ = '0.4'
 __license__ = 'BSD License'
 
-__author__ = 'Fantomas42'
-__email__ = 'fantomas42@gmail.com'
+__author__ = 'Iacopo Spalletti'
+__email__ = 'i.spalletti@nephila.it'
 
-__url__ = 'http://emencia.fr/'
+__url__ = 'http://nephila.it/'

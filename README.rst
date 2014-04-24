@@ -1,12 +1,14 @@
-=========================
-Emencia Django Newsletter
-=========================
+======================
+Django Maja Newsletter
+======================
 
 The problematic was :
 
  *How to couple a contact base to a mailing list and sending newsletters throught Django ?*
 
 Imagine that we have an application containing some kind of profiles or something like the **django.contrib.auth** and you want to send newsletters to them and tracking the activity.
+
+**This package is a fork of of emencia-django-newsletter with django 1.6 compatibility and other customizations**
 
 .. contents::
 

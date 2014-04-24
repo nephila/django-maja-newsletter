@@ -5,7 +5,7 @@ from setuptools import find_packages
 from emencia.django import newsletter
 
 
-setup(name='emencia.django.newsletter',
+setup(name='django-maja-newsletter',
       version=newsletter.__version__,
       description='A Django app for sending newsletter by email to a contact list.',
       long_description=open('README.rst').read() + '\n' +
@@ -38,4 +38,5 @@ setup(name='emencia.django.newsletter',
                         'vobject',
                         'xlwt',
                         'xlrd',
+                        'django-filebrowser-no-grappelli-nph',
                         'django-tinymce'])
