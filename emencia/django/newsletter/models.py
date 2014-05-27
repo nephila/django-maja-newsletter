@@ -237,7 +237,7 @@ class Newsletter(models.Model):
     sending_date = models.DateTimeField(_('sending date'), default=datetime.now)
 
     slug = models.SlugField(help_text=_('Used for displaying the newsletter on the site.'),
-                            unique=True)
+                            max_length=255, unique=True)
     creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
     modification_date = models.DateTimeField(_('modification date'), auto_now=True)
 
