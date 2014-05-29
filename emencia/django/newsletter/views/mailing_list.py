@@ -1,4 +1,5 @@
 """Views for emencia.django.newsletter Mailing List"""
+from django.views.decorators.csrf import csrf_exempt
 from django.template import RequestContext
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render_to_response
@@ -44,6 +45,7 @@ def view_mailinglist_unsubscribe(request, slug, uidb36, token):
                               context_instance=RequestContext(request))
 
 
+@csrf_exempt
 def view_mailinglist_subscribe(request, form_class, mailing_list_id=None):
     """
     A simple view that shows a form for subscription
