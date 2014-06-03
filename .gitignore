@@ -19,3 +19,5 @@ develop-eggs/*
 downloads/*
 src_eggs/*
 .idea
+build
+*.egg-info
