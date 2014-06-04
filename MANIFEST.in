@@ -1,7 +1,5 @@
 include README.rst
 recursive-include docs *
-recursive-include emencia/*
-recursive-include emencia/django/*
-recursive-include emencia/django/newsletter/locale *
-recursive-include emencia/django/newsletter/static *
-recursive-include emencia/django/newsletter/templates *.html
+recursive-include maja_newsletter/locale *
+recursive-include maja_newsletter/static *
+recursive-include maja_newsletter/templates *.html

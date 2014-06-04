@@ -46,7 +46,7 @@ This is particulary usefull with the templates variables if certain informations
 Cronjob/Command
 ---------------
 
-The emencia.django.newsletter application will never send the newsletters registered in the site until you launch the **send_newsletter** command. ::
+The maja_newsletter application will never send the newsletters registered in the site until you launch the **send_newsletter** command. ::
 
   $ python manage.py send_newsletter
 
@@ -79,22 +79,22 @@ The package below is optionnal but handy for rendering a webpage in your newslet
 Getting the code
 ----------------
 
-You could retrieve the last sources from http://github.com/Fantomas42/emencia-django-newsletter and running the installation script ::
+You could retrieve the last sources from http://github.com/nephila/django-maja-newsletter and running the installation script ::
 
   $ python setup.py install
 
 or use pip ::
 
-  $ pip install -e git://github.com/Fantomas42/emencia-django-newsletter.git#egg=emencia.django.newsletter
+  $ pip install -e git://github.com/nephila/django-maja-newsletter.git#egg=maja_newsletter
 
 For the latest stable version use easy_install ::
 
-  $ easy_install emencia.django.newsletter
+  $ easy_install django-maja-newsletter
 
 Applications
 ------------
 
-Then register **emencia.django.newsletter**, **admin**, **contenttypes** and **tagging** in the INSTALLED_APPS section of your project's settings. ::
+Then register **maja_newsletter**, **admin**, **contenttypes** and **tagging** in the INSTALLED_APPS section of your project's settings. ::
 
   INSTALLED_APPS = (
     # Your favorites apps
@@ -103,7 +103,7 @@ Then register **emencia.django.newsletter**, **admin**, **contenttypes** and **t
     'django.contrib.admin',
     'django.contrib.sessions',
     'tagging',
-    'emencia.django.newsletter',)
+    'maja_newsletter',)
 
 
 Urls
@@ -111,19 +111,19 @@ Urls
 
 In your project urls.py adding this following line to include the newsletter's urls for serving the newsletters in HTML. ::
 
-  url(r'^newsletters/', include('emencia.django.newsletter.urls')),
+  url(r'^newsletters/', include('maja_newsletter.urls')),
 
 Note this urlset is provided for convenient usage, but you can do something like that if you want to customize your urls : ::
 
-  url(r'^newsletters/', include('emencia.django.newsletter.urls.newsletter')),
-  url(r'^mailing/', include('emencia.django.newsletter.urls.mailing_list')),
-  url(r'^tracking/', include('emencia.django.newsletter.urls.tracking')),
-  url(r'^statistics/', include('emencia.django.newsletter.urls.statistics')),
+  url(r'^newsletters/', include('maja_newsletter.urls.newsletter')),
+  url(r'^mailing/', include('maja_newsletter.urls.mailing_list')),
+  url(r'^tracking/', include('maja_newsletter.urls.tracking')),
+  url(r'^statistics/', include('maja_newsletter.urls.statistics')),
 
 Media Files
 -----------
 
-You have to make a symbolic link from emencia/django/newsletter/media/edn/ directory to your media directory or make a copy named **edn**,
+You have to make a symbolic link from maja_newsletter/media/edn/ directory to your media directory or make a copy named **edn**,
 but if want to change this value, define NEWSLETTER_MEDIA_URL in the settings.py as appropriate.
 
 Don't forget to serve this url.
@@ -164,8 +164,8 @@ First of all install the `django-tinymce
 That's done, enjoy !
 
 
-HOWTO couple your profile application with emencia.django.newsletter
-====================================================================
+HOWTO couple your profile application with maja_newsletter
+==========================================================
 
 If you wan to quickly import your contacts into a mailing list for example,
 you can write an admin's action for your model.
@@ -177,8 +177,8 @@ In his AdminModel definition add this method and register it into the *actions* 
   class ProfileAdmin(admin.ModelAdmin):
 
       def make_mailing_list(self, request, queryset):
-          from emencia.django.newsletter.models import Contact
-          from emencia.django.newsletter.models import MailingList
+          from maja_newsletter.models import Contact
+          from maja_newsletter.models import MailingList
 
           subscribers = []
           for profile in queryset:
@@ -213,9 +213,9 @@ First of all, please use `VirtualEnv
 
 Follow these steps to start the development : ::
 
-  $ git clone git://github.com/Fantomas42/emencia-django-newsletter.git
-  $ virtualenv --no-site-packages emencia-django-newsletter
-  $ cd emencia-django-newsletter
+  $ git clone git://github.com/nephila/django-maja-newsletter.git
+  $ virtualenv --no-site-packages maja_newsletter
+  $ cd maja_newsletter
   $ source ./bin/activate
   $ python bootstrap.py
   $ ./bin/buildout
@@ -235,23 +235,8 @@ Or you can also launch the demo. ::
 
 Pretty easy no ?
 
-Translations
-------------
-
-If you want to contribute by updating a translation or adding a translation
-in your language, it's simple: create a account on Transifex.net and you
-will be able to edit the translations at this URL :
-
-http://www.transifex.net/projects/p/emencia-django-newsletter/resource/djangopo/
-
-.. image:: http://www.transifex.net/projects/p/emencia-django-newsletter/resource/djangopo/chart/image_png
-
-The translations hosted on Transifex.net will be pulled periodically in the
-repository, but if you are in a hurry, `send me a message
-<https://github.com/inbox/new/Fantomas42>`_.
-
 Database Representation
 =======================
 
-.. image:: https://github.com/Fantomas42/emencia-django-newsletter/raw/master/docs/graph_model.png
+.. image:: https://github.com/nephila/django-maja-newsletter/raw/master/docs/graph_model.png
 
