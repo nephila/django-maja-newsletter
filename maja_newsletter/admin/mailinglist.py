@@ -87,16 +87,16 @@ class MailingListAdmin(admin.ModelAdmin):
                 workgroup.mailinglists.add(new_mailing)
 
         self.message_user(request, _('%s succesfully created by merging.') % new_mailing)
-        return HttpResponseRedirect(reverse('admin:newsletter_mailinglist_change',
+        return HttpResponseRedirect(reverse('admin:maja_newsletter_mailinglist_change',
                                             args=[new_mailing.pk]))
     merge_mailinglist.short_description = _('Merge selected mailinglists')
 
     def exportation_links(self, mailinglist):
         """Display links for exportation"""
         return u'<a href="%s">%s</a> / <a href="%s">%s</a>' % (
-            reverse('admin:newsletter_mailinglist_export_excel',
+            reverse('admin:maja_newsletter_mailinglist_export_excel',
                     args=[mailinglist.pk]), _('Excel'),
-            reverse('admin:newsletter_mailinglist_export_vcard',
+            reverse('admin:maja_newsletter_mailinglist_export_vcard',
                     args=[mailinglist.pk]), _('VCard'))
     exportation_links.allow_tags = True
     exportation_links.short_description = _('Export')
@@ -118,8 +118,8 @@ class MailingListAdmin(admin.ModelAdmin):
         my_urls = patterns('',
                            url(r'^export/vcard/(?P<mailinglist_id>\d+)/$',
                                self.admin_site.admin_view(self.exportion_vcard),
-                               name='newsletter_mailinglist_export_vcard'),
+                               name='maja_newsletter_mailinglist_export_vcard'),
                            url(r'^export/excel/(?P<mailinglist_id>\d+)/$',
                                self.admin_site.admin_view(self.exportion_excel),
-                               name='newsletter_mailinglist_export_excel'))
+                               name='maja_newsletter_mailinglist_export_excel'))
         return my_urls + urls

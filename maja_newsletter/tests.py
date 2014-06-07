@@ -798,4 +798,3 @@ class NewsLetterRenderTest(TestCase):
                            'tracking_image_format': 'jpg',
                            'uidb36': uidb36, 'token': token})
         rendered = track_links(self.text, context)
-        print rendered
