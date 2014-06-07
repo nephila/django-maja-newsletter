@@ -106,6 +106,7 @@ class SMTPServer(models.Model):
     class Meta:
         verbose_name = _('SMTP server')
         verbose_name_plural = _('SMTP servers')
+        db_table = 'newsletter_smtpserver'
 
 
 class Contact(models.Model):
@@ -163,6 +164,7 @@ class Contact(models.Model):
         ordering = ('creation_date',)
         verbose_name = _('contact')
         verbose_name_plural = _('contacts')
+        db_table = 'newsletter_contact'
 
 
 class MailingList(models.Model):
@@ -199,6 +201,7 @@ class MailingList(models.Model):
         ordering = ('-creation_date',)
         verbose_name = _('mailing list')
         verbose_name_plural = _('mailing lists')
+        db_table = 'newsletter_mailinglist'
 
 
 class Newsletter(models.Model):
@@ -264,6 +267,7 @@ class Newsletter(models.Model):
         verbose_name = _('newsletter')
         verbose_name_plural = _('newsletters')
         permissions = (('can_change_status', 'Can change status'),)
+        db_table = 'newsletter_newsletter'
 
 
 class Link(models.Model):
@@ -283,6 +287,7 @@ class Link(models.Model):
         ordering = ('-creation_date',)
         verbose_name = _('link')
         verbose_name_plural = _('links')
+        db_table = 'newsletter_link'
 
 
 class Attachment(models.Model):
@@ -300,6 +305,7 @@ class Attachment(models.Model):
     class Meta:
         verbose_name = _('attachment')
         verbose_name_plural = _('attachments')
+        db_table = 'newsletter_attachment'
 
     def __unicode__(self):
         return self.title
@@ -346,6 +352,7 @@ class ContactMailingStatus(models.Model):
         ordering = ('-creation_date',)
         verbose_name = _('contact mailing status')
         verbose_name_plural = _('contact mailing statuses')
+        db_table = 'newsletter_contactmailingstatus'
 
 
 class WorkGroup(models.Model):
@@ -366,3 +373,4 @@ class WorkGroup(models.Model):
     class Meta:
         verbose_name = _('workgroup')
         verbose_name_plural = _('workgroups')
+        db_table = 'newsletter_workgroup'
