@@ -13,7 +13,7 @@ def view_tinymce_templates(request):
     templates = []
     for tmpl in tmpl_dir:
         fileobject = FileObject(os.path.join(e_settings.NEWSLETTER_TINYMCE_TEMPLATE_DIR,tmpl))
-        templates.append('["%s", "%s"]' % (fileobject.filename, fileobject._url_full()))
+        templates.append('["%s", "%s"]' % (fileobject.filename, fileobject.url_full))
     
     page = """
     var tinyMCETemplateList = [
