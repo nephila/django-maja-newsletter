@@ -4,6 +4,8 @@ SITE_ID = 1
 
 USE_I18N = False
 
+SECRET_KEY = "testkey"
+
 ROOT_URLCONF = 'maja_newsletter.urls'
 
 DATABASES = {'default': {'NAME': 'newsletter_tests.db',

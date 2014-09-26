@@ -125,7 +125,7 @@ class ContactAdmin(admin.ModelAdmin):
                 workgroup.mailinglists.add(new_mailing)
 
         self.message_user(request, _('%s succesfully created.') % new_mailing)
-        return HttpResponseRedirect(reverse('admin:newsletter_mailinglist_change',
+        return HttpResponseRedirect(reverse('admin:maja_newsletter_mailinglist_change',
                                             args=[new_mailing.pk]))
     create_mailinglist.short_description = _('Create a mailinglist')
 

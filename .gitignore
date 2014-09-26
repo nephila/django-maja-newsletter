@@ -7,7 +7,7 @@
 .installed.cfg
 TODO
 demo/demo.db
-emencia.django.newsletter.egg-info/*
+*.egg-info/*
 lib/*
 bin/*
 eggs/*
@@ -21,3 +21,5 @@ src_eggs/*
 .idea
 build
 *.egg-info
+.coverage
+upload

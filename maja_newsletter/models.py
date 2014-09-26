@@ -43,7 +43,7 @@ class SMTPServer(models.Model):
     password = models.CharField(_('server password'), max_length=128, blank=True,
                                 help_text=_('Leave empty if the host is public.'))
     port = models.IntegerField(_('server port'), default=25)
-    tls = models.BooleanField(_('server use TLS'))
+    tls = models.BooleanField(_('server use TLS'), default=False)
 
     headers = models.TextField(_('custom headers'), blank=True,
                                help_text=_('key1: value1 key2: value2, splitted by return line.\n'\
@@ -149,7 +149,7 @@ class Contact(models.Model):
     def get_absolute_url(self):
         if self.content_type and self.object_id:
             return self.content_object.get_absolute_url()
-        return reverse('admin:newsletter_contact_change', args=(self.pk,))
+        return reverse('admin:maja_newsletter_contact_change', args=(self.pk,))
 
     def __unicode__(self):
         if self.first_name and self.last_name:
