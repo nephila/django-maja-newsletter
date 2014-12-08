@@ -45,9 +45,10 @@ class SendBatch(models.Model):
         db_table = 'newsletter_sendbatch'
 
     def save(self, *args, **kwargs):
-        super(SendBatch, self).save(*args, **kwargs)
-        self.server.emails_remains += self.sendings
-        self.server.save()
+        if not self.pk: 
+            self.server.emails_remains += self.sendings
+            self.server.save()
+            super(SendBatch, self).save(*args, **kwargs)
 
 
 class SMTPServer(models.Model):

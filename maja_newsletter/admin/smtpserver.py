@@ -27,6 +27,10 @@ class SMTPServerAdminForm(forms.ModelForm):
 
 class SendBatchInline(admin.TabularInline):
     model = SendBatch
+    can_delete = False
+    extra = 1
+    fields = ('sendings', 'date_create')
+    readonly_fields = ('date_create',)
 
 
 class SMTPServerAdmin(admin.ModelAdmin):
@@ -42,8 +46,6 @@ class SMTPServerAdmin(admin.ModelAdmin):
                  )
     actions = ['check_connections']
     readonly_fields = ('emails_remains', )
-    actions_on_top = False
-    actions_on_bottom = True
     inlines = (SendBatchInline,)
 
     def check_connections(self, request, queryset):
