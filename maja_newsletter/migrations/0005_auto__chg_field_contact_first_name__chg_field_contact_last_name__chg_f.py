@@ -10,24 +10,24 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
 
         # Changing field 'Contact.first_name'
-        db.alter_column('maja_newsletter_contact', 'first_name', self.gf('django.db.models.fields.CharField')(max_length=150))
+        db.alter_column('newsletter_contact', 'first_name', self.gf('django.db.models.fields.CharField')(max_length=150))
 
         # Changing field 'Contact.last_name'
-        db.alter_column('maja_newsletter_contact', 'last_name', self.gf('django.db.models.fields.CharField')(max_length=150))
+        db.alter_column('newsletter_contact', 'last_name', self.gf('django.db.models.fields.CharField')(max_length=150))
 
         # Changing field 'Contact.email'
-        db.alter_column('maja_newsletter_contact', 'email', self.gf('django.db.models.fields.EmailField')(unique=True, max_length=150))
+        db.alter_column('newsletter_contact', 'email', self.gf('django.db.models.fields.EmailField')(unique=True, max_length=150))
 
     def backwards(self, orm):
 
         # Changing field 'Contact.first_name'
-        db.alter_column('maja_newsletter_contact', 'first_name', self.gf('django.db.models.fields.CharField')(max_length=50))
+        db.alter_column('newsletter_contact', 'first_name', self.gf('django.db.models.fields.CharField')(max_length=50))
 
         # Changing field 'Contact.last_name'
-        db.alter_column('maja_newsletter_contact', 'last_name', self.gf('django.db.models.fields.CharField')(max_length=50))
+        db.alter_column('newsletter_contact', 'last_name', self.gf('django.db.models.fields.CharField')(max_length=50))
 
         # Changing field 'Contact.email'
-        db.alter_column('maja_newsletter_contact', 'email', self.gf('django.db.models.fields.EmailField')(max_length=75, unique=True))
+        db.alter_column('newsletter_contact', 'email', self.gf('django.db.models.fields.EmailField')(max_length=75, unique=True))
 
     models = {
         'auth.group': {
@@ -51,14 +51,14 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'maja_newsletter.attachment': {
-            'Meta': {'object_name': 'Attachment'},
+            'Meta': {'object_name': 'Attachment', 'db_table': "'newsletter_attachment'"},
             'file_attachment': ('django.db.models.fields.files.FileField', [], {'max_length': '255'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'newsletter': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['maja_newsletter.Newsletter']"}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         },
         'maja_newsletter.contact': {
-            'Meta': {'ordering': "('creation_date',)", 'object_name': 'Contact'},
+            'Meta': {'ordering': "('creation_date',)", 'object_name': 'Contact', 'db_table': "'newsletter_contact'"},
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']", 'null': 'True', 'blank': 'True'}),
             'creation_date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'email': ('django.db.models.fields.EmailField', [], {'unique': 'True', 'max_length': '150'}),
@@ -73,7 +73,7 @@ class Migration(SchemaMigration):
             'valid': ('django.db.models.fields.BooleanField', [], {'default': 'True'})
         },
         'maja_newsletter.contactmailingstatus': {
-            'Meta': {'ordering': "('-creation_date',)", 'object_name': 'ContactMailingStatus'},
+            'Meta': {'ordering': "('-creation_date',)", 'object_name': 'ContactMailingStatus', 'db_table': "'newsletter_contactmailingstatus'"},
             'contact': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['maja_newsletter.Contact']"}),
             'creation_date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -82,14 +82,14 @@ class Migration(SchemaMigration):
             'status': ('django.db.models.fields.IntegerField', [], {})
         },
         'maja_newsletter.link': {
-            'Meta': {'ordering': "('-creation_date',)", 'object_name': 'Link'},
+            'Meta': {'ordering': "('-creation_date',)", 'object_name': 'Link', 'db_table': "'newsletter_link'"},
             'creation_date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'url': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         },
         'maja_newsletter.mailinglist': {
-            'Meta': {'ordering': "('-creation_date',)", 'object_name': 'MailingList'},
+            'Meta': {'ordering': "('-creation_date',)", 'object_name': 'MailingList', 'db_table': "'newsletter_mailinglist'"},
             'creation_date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -99,23 +99,23 @@ class Migration(SchemaMigration):
             'unsubscribers': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'mailinglist_unsubscriber'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['maja_newsletter.Contact']"})
         },
         'maja_newsletter.newsletter': {
-            'Meta': {'ordering': "('-creation_date',)", 'object_name': 'Newsletter'},
+            'Meta': {'ordering': "('-creation_date',)", 'object_name': 'Newsletter', 'db_table': "'newsletter_newsletter'"},
             'content': ('django.db.models.fields.TextField', [], {'default': "u'<body>\\n<!-- Edit your newsletter here -->\\n</body>'"}),
             'creation_date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'header_reply': ('django.db.models.fields.CharField', [], {'default': "'Visconti <visconti@visconti.it>'", 'max_length': '255'}),
-            'header_sender': ('django.db.models.fields.CharField', [], {'default': "'Visconti <visconti@visconti.it>'", 'max_length': '255'}),
+            'header_reply': ('django.db.models.fields.CharField', [], {'default': "'Hogrefe Editore  <info@hogrefe.it>'", 'max_length': '255'}),
+            'header_sender': ('django.db.models.fields.CharField', [], {'default': "'Hogrefe Editore  <info@hogrefe.it>'", 'max_length': '255'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'mailing_list': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['maja_newsletter.MailingList']"}),
             'modification_date': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'sending_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'server': ('django.db.models.fields.related.ForeignKey', [], {'default': '1', 'to': "orm['maja_newsletter.SMTPServer']"}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '50'}),
+            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '255'}),
             'status': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'test_contacts': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['maja_newsletter.Contact']", 'null': 'True', 'blank': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         },
         'maja_newsletter.smtpserver': {
-            'Meta': {'object_name': 'SMTPServer'},
+            'Meta': {'object_name': 'SMTPServer', 'db_table': "'newsletter_smtpserver'"},
             'emails_remains': ('django.db.models.fields.IntegerField', [], {'default': '10000'}),
             'headers': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'host': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
@@ -128,7 +128,7 @@ class Migration(SchemaMigration):
             'user': ('django.db.models.fields.CharField', [], {'max_length': '128', 'blank': 'True'})
         },
         'maja_newsletter.workgroup': {
-            'Meta': {'object_name': 'WorkGroup'},
+            'Meta': {'object_name': 'WorkGroup', 'db_table': "'newsletter_workgroup'"},
             'contacts': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['maja_newsletter.Contact']", 'null': 'True', 'blank': 'True'}),
             'group': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.Group']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
