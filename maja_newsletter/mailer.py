@@ -454,6 +454,8 @@ class NewsLetterExpedition(NewsLetterSender):
                                        message.as_string())
                 except Exception, e:
                     exception = e
+                    if self.verbose:
+                        print(e)
                 else:
                     exception = None
 
