@@ -1,9 +1,12 @@
 """Utils for newsletter"""
 from BeautifulSoup import BeautifulSoup
+from django.contrib.sites.models import Site
+import premailer
+
 from django.core.urlresolvers import reverse
 
 from maja_newsletter.models import Link
-from maja_newsletter.settings import USE_PRETTIFY
+from maja_newsletter.settings import USE_PRETTIFY, USE_PREMAILER
 
 
 def body_insertion(content, insertion, end=False):
@@ -19,9 +22,14 @@ def body_insertion(content, insertion, end=False):
         soup.body.insert(0, insertion)
 
     if USE_PRETTIFY:
-        return soup.prettify()
+        text = soup.prettify()
     else:
-        return soup.renderContents()
+        text = soup.renderContents()
+    if USE_PREMAILER:
+        site = Site.objects.get_current()
+        return premailer.transform(text, base_url='http://%s' % site.domain)
+    else:
+        return text
 
 
 def track_links(content, context):

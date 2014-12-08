@@ -12,8 +12,12 @@ USE_WORKGROUPS = getattr(settings, 'NEWSLETTER_USE_WORKGROUPS', False)
 USE_UTM_TAGS = getattr(settings, 'NEWSLETTER_USE_UTM_TAGS', True)
 USE_TINYMCE = getattr(settings, 'NEWSLETTER_USE_TINYMCE',
                       'tinymce' in settings.INSTALLED_APPS)
+USE_CKEDITOR = getattr(settings, 'NEWSLETTER_USE_CKEDITOR',
+                      'djangocms_text_ckeditor' in settings.INSTALLED_APPS)
 
-USE_PRETTIFY = getattr(settings, 'NEWSLETTER_USE_PRETTIFY', True)
+USE_PRETTIFY = getattr(settings, 'NEWSLETTER_USE_PRETTIFY', False)
+USE_PREMAILER = getattr(settings, 'NEWSLETTER_USE_PREMAILER', True)
+
 
 MAILER_HARD_LIMIT = getattr(settings, 'NEWSLETTER_MAILER_HARD_LIMIT', 10000)
 
