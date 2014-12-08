@@ -13,10 +13,11 @@ from maja_newsletter.models import MailingList
 from maja_newsletter.mailer import Mailer
 from maja_newsletter.settings import USE_TINYMCE
 from maja_newsletter.settings import USE_WORKGROUPS
+from maja_newsletter.settings import USE_CKEDITOR
 try:
     CAN_USE_PREMAILER = True
-    from maja_newsletter.utils.premailer import Premailer
-    from maja_newsletter.utils.premailer import PremailerError
+    from maja_newsletter.utils.premailer_old import Premailer
+    from maja_newsletter.utils.premailer_old import PremailerError
 except ImportError:
     CAN_USE_PREMAILER = False
 from maja_newsletter.utils.workgroups import request_workgroups
@@ -192,6 +193,18 @@ if USE_TINYMCE:
 
     class NewsletterAdmin(BaseNewsletterAdmin):
         form = NewsletterTinyMCEForm
+elif USE_CKEDITOR:
+    from djangocms_text_ckeditor.widgets import TextEditorWidget
+
+    class NewsletterCKEditorForm(forms.ModelForm):
+        content = forms.CharField(
+            widget=TextEditorWidget())
+
+        class Meta:
+            model = Newsletter
+
+    class NewsletterAdmin(BaseNewsletterAdmin):
+        form = NewsletterCKEditorForm
 else:
     class NewsletterAdmin(BaseNewsletterAdmin):
         pass
