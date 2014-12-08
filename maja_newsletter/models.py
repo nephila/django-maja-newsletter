@@ -34,6 +34,22 @@ except AttributeError:
     SMTP.ehlo_or_helo_if_needed = ehlo_or_helo_if_needed
 
 
+class SendBatch(models.Model):
+    server = models.ForeignKey('SMTPServer')
+    sendings = models.IntegerField(_(u'send batch'))
+    date_create = models.DateTimeField(_(u'add date'), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _('email batch')
+        verbose_name_plural = _('email batches')
+        db_table = 'newsletter_sendbatch'
+
+    def save(self, *args, **kwargs):
+        super(SendBatch, self).save(*args, **kwargs)
+        self.server.emails_remains += self.sendings
+        self.server.save()
+
+
 class SMTPServer(models.Model):
     """Configuration of a SMTP server"""
     name = models.CharField(_('name'), max_length=255)

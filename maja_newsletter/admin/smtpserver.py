@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from maja_newsletter.models import SMTPServer
+from maja_newsletter.models import SMTPServer, SendBatch
 
 
 class SMTPServerAdminForm(forms.ModelForm):
@@ -25,6 +25,10 @@ class SMTPServerAdminForm(forms.ModelForm):
         model = SMTPServer
 
 
+class SendBatchInline(admin.TabularInline):
+    model = SendBatch
+
+
 class SMTPServerAdmin(admin.ModelAdmin):
     form = SMTPServerAdminForm
     list_display = ('name', 'host', 'port', 'user', 'tls', 'mails_hour',)
@@ -37,8 +41,10 @@ class SMTPServerAdmin(admin.ModelAdmin):
                                        'classes': ('collapse', )}),
                  )
     actions = ['check_connections']
+    readonly_fields = ('emails_remains', )
     actions_on_top = False
     actions_on_bottom = True
+    inlines = (SendBatchInline,)
 
     def check_connections(self, request, queryset):
         """Check the SMTP connection"""
