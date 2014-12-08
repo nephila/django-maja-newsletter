@@ -38,4 +38,5 @@ setup(name='django-maja-newsletter',
                         'xlwt',
                         'xlrd',
                         'django-filebrowser-no-grappelli-nph',
-                        'django-tinymce'])
+                        'premailer'
+                        ])
