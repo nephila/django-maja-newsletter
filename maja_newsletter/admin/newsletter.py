@@ -2,7 +2,7 @@
 from HTMLParser import HTMLParseError
 
 from django import forms
-from django.db.models import Q
+from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
@@ -172,8 +172,8 @@ class BaseNewsletterAdmin(admin.ModelAdmin):
 
     def make_cancel_sending(self, request, queryset):
         """Cancel the sending of newsletters"""
-        queryset = queryset.filter(Q(status=Newsletter.WAITING) |
-                                   Q(status=Newsletter.SENDING))
+        queryset = queryset.filter(models.Q(status=Newsletter.WAITING) |
+                                   models.Q(status=Newsletter.SENDING))
         for newsletter in queryset:
             newsletter.status = Newsletter.CANCELED
             newsletter.save()
@@ -196,15 +196,10 @@ if USE_TINYMCE:
 elif USE_CKEDITOR:
     from djangocms_text_ckeditor.widgets import TextEditorWidget
 
-    class NewsletterCKEditorForm(forms.ModelForm):
-        content = forms.CharField(
-            widget=TextEditorWidget())
-
-        class Meta:
-            model = Newsletter
-
     class NewsletterAdmin(BaseNewsletterAdmin):
-        form = NewsletterCKEditorForm
+        formfield_overrides = {
+            models.TextField: {'widget': TextEditorWidget(configuration='NEWSLETTER_CKEDITOR_SETTINGS')}
+        }
 else:
     class NewsletterAdmin(BaseNewsletterAdmin):
         pass
