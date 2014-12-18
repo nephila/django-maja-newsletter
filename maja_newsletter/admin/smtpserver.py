@@ -25,10 +25,22 @@ class SMTPServerAdminForm(forms.ModelForm):
         model = SMTPServer
 
 
+class SendBatchInlineForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(SendBatchInlineForm, self).__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields['sendings'].widget.attrs['readonly'] = 'readonly'
+
+    class Meta:
+        models = SendBatch
+
+
 class SendBatchInline(admin.TabularInline):
     model = SendBatch
     can_delete = False
     extra = 1
+    form = SendBatchInlineForm
     fields = ('sendings', 'date_create')
     readonly_fields = ('date_create',)
 
