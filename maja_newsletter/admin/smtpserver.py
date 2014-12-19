@@ -30,7 +30,7 @@ class SendBatchInlineForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(SendBatchInlineForm, self).__init__(*args, **kwargs)
         if self.instance.pk:
-            self.fields['sendings'].widget.attrs['readonly'] = 'readonly'
+            self.fields['emails'].widget.attrs['readonly'] = 'readonly'
 
     class Meta:
         models = SendBatch
@@ -41,8 +41,8 @@ class SendBatchInline(admin.TabularInline):
     can_delete = False
     extra = 1
     form = SendBatchInlineForm
-    fields = ('sendings', 'date_create')
-    readonly_fields = ('date_create',)
+    fields = ('emails', 'date_create', 'user')
+    readonly_fields = ('date_create', 'user')
 
 
 class SMTPServerAdmin(admin.ModelAdmin):
@@ -75,3 +75,14 @@ class SMTPServerAdmin(admin.ModelAdmin):
                 status = 'KO'
             self.message_user(request, message % (server.__unicode__(), status))
     check_connections.short_description = _('Check connection')
+
+    def save_formset(self, request, form, formset, change):
+        """
+        Assign a default user to send batches when adding one
+        """
+        instances = formset.save(commit=False)
+        for instance in instances:
+            if isinstance(instance, SendBatch):
+                if hasattr(instance, "user_id") and not instance.user_id:
+                    instance.user = request.user
+            instance.save()

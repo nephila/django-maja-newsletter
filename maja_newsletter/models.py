@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.utils.encoding import force_unicode
 
 from tagging.fields import TagField
@@ -36,8 +36,9 @@ except AttributeError:
 
 class SendBatch(models.Model):
     server = models.ForeignKey('SMTPServer')
-    sendings = models.IntegerField(_(u'send batch'))
+    emails = models.IntegerField(_(u'emails batch'))
     date_create = models.DateTimeField(_(u'add date'), auto_now_add=True)
+    user = models.ForeignKey(User, verbose_name=_(u'operator'), null=True)
 
     class Meta:
         verbose_name = _('email batch')
@@ -46,7 +47,7 @@ class SendBatch(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk: 
-            self.server.emails_remains += self.sendings
+            self.server.emails_remains += self.emails
             self.server.save()
             super(SendBatch, self).save(*args, **kwargs)
 
