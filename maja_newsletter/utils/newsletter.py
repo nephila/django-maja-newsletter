@@ -1,9 +1,10 @@
 """Utils for newsletter"""
 from BeautifulSoup import BeautifulSoup
-from django.contrib.sites.models import Site
 import premailer
 
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
+from django.utils.encoding import smart_text
 
 from maja_newsletter.models import Link
 from maja_newsletter.settings import USE_PRETTIFY, USE_PREMAILER
@@ -12,7 +13,7 @@ from maja_newsletter.settings import USE_PRETTIFY, USE_PREMAILER
 def body_insertion(content, insertion, end=False):
     """Insert an HTML content into the body HTML node"""
     if not content.startswith('<body'):
-        content = '<body>%s</body>' % content
+        content = u'<body>%s</body>' % content
     soup = BeautifulSoup(content)
     insertion = BeautifulSoup(insertion)
 
@@ -25,6 +26,8 @@ def body_insertion(content, insertion, end=False):
         text = soup.prettify()
     else:
         text = soup.renderContents()
+    text = smart_text(text)
+
     if USE_PREMAILER:
         site = Site.objects.get_current()
         return premailer.transform(text, base_url='http://%s' % site.domain)
