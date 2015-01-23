@@ -164,6 +164,7 @@ class NewsLetterSender(object):
                            'tracking_image_format': TRACKING_IMAGE_FORMAT,
                            'uidb36': uidb36, 'token': token})
         content = self.newsletter_template.render(context)
+
         if TRACKING_LINKS:
             content = track_links(content, context)
         link_site = render_to_string('newsletter/newsletter_link_site.html', context)

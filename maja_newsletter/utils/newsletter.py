@@ -18,7 +18,7 @@ def body_insertion(content, insertion, end=False):
     insertion = BeautifulSoup(insertion)
 
     if end:
-        soup.body.append(insertion)
+        soup.append(insertion)
     else:
         soup.body.insert(0, insertion)
 
