@@ -13,7 +13,7 @@ from maja_newsletter.settings import USE_PRETTIFY, USE_PREMAILER
 def body_insertion(content, insertion, end=False):
     """Insert an HTML content into the body HTML node"""
     if not content.startswith('<body'):
-        content = u'<body>%s</body>' % content
+        content = u'<body>%s</body>' % smart_text(content)
     soup = BeautifulSoup(content)
     insertion = BeautifulSoup(insertion)
 
