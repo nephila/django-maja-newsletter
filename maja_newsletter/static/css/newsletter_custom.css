@@ -1,0 +1,29 @@
+.dashboard #content {
+    width: 1000px;
+}
+
+#content-main {
+    float: left;
+    width: 500px;
+}
+
+#content-related {
+    float: right;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+#changelist {
+    float: left;
+    width: 485px;
+    position: relative;
+    display: inline-block;
+    margin-left: 10px;
+    border: 1px solid #ccc;
+}
+
+#changelist table{
+    display: block;
+    width: 100%;
+    word-break: break-all;
+}

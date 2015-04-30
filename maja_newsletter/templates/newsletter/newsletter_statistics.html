@@ -6,7 +6,9 @@
 
 {% block bodyclass %}dashboard{% endblock %}
 
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static 'admin/css/dashboard.css' %}" />{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static 'admin/css/dashboard.css' %}" />
+<link rel="stylesheet" href="{{ STATIC_URL }}css/newsletter_custom.css" type="text/css" media="screen">
+{% endblock %}
 
 {% block extrahead %}
 <script type="text/javascript" src="{{ STATIC_URL }}edn/js/jquery.js"></script>
@@ -174,6 +176,26 @@ $(document).ready(function(){
 {% endblock %}
 
 {% block sidebar %}
+<div id="changelist">
+    <table cellspacing="0">
+      <thead>
+  <tr>
+    <th>{% trans "Date" %}</th>
+    <th>{% trans "Contact" %}</th>
+    <th>{% trans "Action" %}</th>
+  </tr>
+      </thead>
+      <tbody>
+  {% for event in contact_mailing_status %}
+  <tr class="{% cycle row1,row2 %}">
+    <td class="nowrap">{{ event.creation_date|date:"d F Y, H:i" }}</td>
+    <td>{{ event.contact.mail_format }}</td>
+    <td>{{ event.get_status_display }} {% if event.link %}{{ event.link.url|urlize }}{% endif %}</td>
+  </tr>
+  {% endfor %}
+      </tbody>
+    </table>
+  </div>
 <div id="content-related">
     <div class="module" id="report-module">
       <h2>{% trans "Report" %}</h2>
