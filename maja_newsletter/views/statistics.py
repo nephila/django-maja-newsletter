@@ -50,7 +50,7 @@ def view_newsletter_statistics(request, slug):
     """Display the statistics of a newsletters"""
     opts = Newsletter._meta
     newsletter = get_object_or_404(Newsletter, slug=slug)
-    contact_mailing_status = newsletter.contactmailingstatus_set.filter(status=6)
+    contact_mailing_status = newsletter.contactmailingstatus_set.filter(status=6).distinct('contact')
 
     context = {'title': _('Statistics of %s') % newsletter.__unicode__(),
                'object': newsletter,

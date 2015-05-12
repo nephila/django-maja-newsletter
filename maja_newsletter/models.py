@@ -349,7 +349,7 @@ class ContactMailingStatus(models.Model):
                                  self.get_status_display())
 
     class Meta:
-        ordering = ('-creation_date',)
+        #ordering = ('-creation_date',)
         verbose_name = _('contact mailing status')
         verbose_name_plural = _('contact mailing statuses')
         db_table = 'newsletter_contactmailingstatus'
