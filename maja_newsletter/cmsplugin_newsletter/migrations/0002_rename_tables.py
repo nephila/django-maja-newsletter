@@ -5,7 +5,7 @@ import cms
 from south.utils import datetime_utils as datetime
 from south.db import db
 from south.v2 import SchemaMigration
-from django.db import models
+from django.db import models, connection
 
 
 class Migration(SchemaMigration):
@@ -13,13 +13,15 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
 
         if LooseVersion(cms.__version__) >= LooseVersion('3'):
-            db.rename_table(u'cmsplugin_newsletter_subscriptionformplugin', u'maja_newsletter_subscriptionformplugin')
+            if 'cmsplugin_subscriptionformplugin' in connection.introspection.table_names():
+                db.rename_table(u'cmsplugin_subscriptionformplugin', u'cmsplugin_newsletter_subscriptionformplugin')
 
 
     def backwards(self, orm):
 
         if LooseVersion(cms.__version__) >= LooseVersion('3'):
-            db.rename_table(u'maja_newsletter_subscriptionformplugin', u'cmsplugin_newsletter_subscriptionformplugin')
+            if 'cmsplugin_newsletter_subscriptionformplugin' in connection.introspection.table_names():
+                db.rename_table(u'cmsplugin_newsletter_subscriptionformplugin', u'cmsplugin_subscriptionformplugin')
 
     models = {
         'cms.cmsplugin': {
