@@ -1,0 +1,23 @@
+/**
+ * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
+
+// Register a templates definition set named "default".
+CKEDITOR.addTemplates( 'default', {
+	// The name of sub folder which hold the shortcut preview images of the
+	// templates.
+	imagesPath: '{{ templates_dir }}',
+
+	// The templates definitions.
+	templates: [
+		{% for template in templates %}
+		{
+			title: '{{ template.title|escapejs }}',
+			image: '{{ template.image|escapejs }}',
+			description: '{{ template.description|escapejs }}',
+			html: '{{ template.body|safe|escapejs }}',
+		},
+		{% endfor %}
+	]
+} );
