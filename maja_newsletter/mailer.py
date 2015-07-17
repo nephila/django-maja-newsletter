@@ -277,6 +277,10 @@ class Mailer(NewsLetterSender):
                                    message.as_string())
             except Exception, e:
                 exception = e
+                if self.verbose:
+                    print(e)
+                if type(e) == UnicodeEncodeError:
+                    raise e
             else:
                 exception = None
 
@@ -456,6 +460,8 @@ class NewsLetterExpedition(NewsLetterSender):
                     exception = e
                     if self.verbose:
                         print(e)
+                    if type(e) == UnicodeEncodeError:
+                        raise e
                 else:
                     exception = None
 

@@ -30,7 +30,7 @@ def body_insertion(content, insertion, end=False):
 
     if USE_PREMAILER:
         site = Site.objects.get_current()
-        return premailer.transform(text, base_url='http://%s' % site.domain)
+        return premailer.transform(smart_text(text), base_url='http://%s' % site.domain)
     else:
         return text
 
