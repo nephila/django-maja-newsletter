@@ -51,3 +51,5 @@ FILEBROWSER_DIRECTORY = getattr(settings, 'FILEBROWSER_DIRECTORY', 'upload/')
 NEWSLETTER_TINYMCE_TEMPLATE_DIR = getattr(settings, 'NEWSLETTER_TINYMCE_TEMPLATE_DIR', 'upload/tinymce/templates/')
 NEWSLETTER_TINYMCE_TEMPLATE_URL = getattr(settings, 'NEWSLETTER_TINYMCE_TEMPLATE_URL', '/tinymce/templates/')
 CKEDITOR_SETTINGS = getattr(settings, 'NEWSLETTER_CKEDITOR_SETTINGS', getattr(settings, 'CKEDITOR_SETTINGS', {}))
+
+USE_CELERY = getattr(settings, 'USE_CELERY', True)
