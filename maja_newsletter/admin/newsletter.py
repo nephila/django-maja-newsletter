@@ -12,7 +12,7 @@ from maja_newsletter.models import Attachment
 from maja_newsletter.models import MailingList
 from maja_newsletter.mailer import Mailer
 from maja_newsletter.settings import USE_TINYMCE
-from maja_newsletter.settings import NEWSLETTER_USE_CELERY
+from maja_newsletter.settings import USE_CELERY
 from maja_newsletter.settings import USE_WORKGROUPS
 from maja_newsletter.settings import USE_CKEDITOR
 try:
@@ -167,7 +167,7 @@ class BaseNewsletterAdmin(admin.ModelAdmin):
             newsletter.server.emails_remains = newsletter.server.emails_remains - emails_to_send
             newsletter.server.save()
             newsletter.save()
-            if NEWSLETTER_USE_CELERY:
+            if USE_CELERY:
                 celery_send_newsletter.delay(newsletter)
         if sent_all:
             messages.success(request, _('%s newletters are ready to send') % queryset.count())
