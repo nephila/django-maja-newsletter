@@ -44,7 +44,7 @@ class AllMailingListSubscriptionForm(MailingListSubscriptionForm):
         widget=forms.CheckboxSelectMultiple())
 
     def __init__(self, *args, **kwargs):
-        super(AllMailingListSubscriptionForm, self).__init__(self, *args, **kwargs)
+        super(AllMailingListSubscriptionForm, self).__init__(*args, **kwargs)
         self.fields['mailing_lists'].initial = [obj.id for obj in MailingList.objects.all()]
 
     def save(self, mailing_list):
