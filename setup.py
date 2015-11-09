@@ -4,7 +4,6 @@ from setuptools import find_packages
 
 import maja_newsletter
 
-
 setup(name='django-maja-newsletter',
       version=maja_newsletter.__version__,
       description='A Django app for sending newsletter by email to a contact list.',
@@ -19,7 +18,7 @@ setup(name='django-maja-newsletter',
           'Operating System :: OS Independent',
           'License :: OSI Approved :: BSD License',
           'Development Status :: 5 - Production/Stable',
-          'Topic :: Software Development :: Libraries :: Python Modules',],
+          'Topic :: Software Development :: Libraries :: Python Modules', ],
 
       author=maja_newsletter.__author__,
       author_email=maja_newsletter.__email__,
@@ -29,14 +28,17 @@ setup(name='django-maja-newsletter',
       packages=find_packages(exclude=['demo']),
       include_package_data=True,
       zip_safe=False,
-      install_requires=['setuptools',
-                        'html2text',
-                        'python-dateutil==1.5',
-                        'BeautifulSoup',
-                        'django-tagging',
-                        'vobject',
-                        'xlwt',
-                        'xlrd',
-                        'django-filebrowser-no-grappelli-nph',
-                        'premailer'
-                        ])
+      install_requires=[
+          'setuptools',
+          'html2text',
+          'python-dateutil==1.5',
+          'BeautifulSoup',
+          'django-tagging',
+          'vobject',
+          'xlwt',
+          'xlrd',
+          'django-filebrowser-no-grappelli-nph',
+          'premailer',
+          'pytz',
+          'celery>=3.1,<3.2'
+      ])
