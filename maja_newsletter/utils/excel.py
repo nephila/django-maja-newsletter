@@ -2,13 +2,23 @@
 # Based on http://www.djangosnippets.org/snippets/1151/
 import datetime
 
+import pytz
+
+from django.conf import settings
+from django.db.models.query import QuerySet, ValuesQuerySet
 from django.http import HttpResponse
-from django.db.models.query import QuerySet
-from django.db.models.query import ValuesQuerySet
+from django.utils import timezone
 
 
 class ExcelResponse(HttpResponse):
     """ExcelResponse feeded by queryset"""
+
+    def _make_naive(self, value):
+        if isinstance(value, basestring):
+            return value
+        if timezone.is_aware(value):
+            return timezone.make_naive(value, pytz.timezone(settings.TIME_ZONE))
+        return value
 
     def __init__(self, data, output_name='excel_data', headers=None,
                  force_csv=False, encoding='utf8'):
@@ -26,6 +36,10 @@ class ExcelResponse(HttpResponse):
             if hasattr(data[0], '__getitem__'):
                 valid_data = True
         assert valid_data is True, "ExcelResponse requires a sequence of sequences"
+
+        for item in data:
+            item[3] = self._make_naive(item[3])
+            item[10] = self._make_naive(item[10])
 
         import StringIO
         output = StringIO.StringIO()
