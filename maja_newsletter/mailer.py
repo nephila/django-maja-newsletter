@@ -195,7 +195,7 @@ class NewsLetterSender(object):
         """Check if the newsletter can be sent"""
         if self.test:
             return True
-        
+
         try:
             if settings.USE_TZ:
                 from django.utils.timezone import utc
@@ -212,8 +212,7 @@ class NewsLetterSender(object):
 
         return False
 
-    @property
-    def expedition_list(self):
+    def expedition_list(self, send_all=False):
         """Build the expedition list"""
         if self.test:
             return self.newsletter.test_contacts.all()
@@ -246,7 +245,7 @@ class Mailer(NewsLetterSender):
     In test mode the mailer always send mails but do not log it"""
     smtp = None
 
-    def run(self):
+    def run(self, send_all=False):
         """Send the mails"""
         if not self.can_send:
             return
@@ -258,7 +257,7 @@ class Mailer(NewsLetterSender):
         start = datetime.now()
         delay = self.newsletter.server.delay()
 
-        expedition_list = self.expedition_list
+        expedition_list = self.expedition_list()
 
         number_of_recipients = len(expedition_list)
         if self.verbose:
@@ -304,13 +303,15 @@ class Mailer(NewsLetterSender):
         """Make a connection to the SMTP"""
         self.smtp = self.newsletter.server.connect()
 
-    @property
-    def expedition_list(self):
+    def expedition_list(self, send_all=False):
         """Build the expedition list"""
         credits = self.newsletter.server.credits()
         if credits <= 0:
             return []
-        return super(Mailer, self).expedition_list[:credits]
+        result_list = super(Mailer, self).expedition_list()
+        if send_all:
+            result_list = result_list[:credits]
+        return result_list
 
     @property
     def can_send(self):
@@ -436,7 +437,7 @@ class NewsLetterExpedition(NewsLetterSender):
 
         self.attachments = self.build_attachments()
 
-        expedition_list = self.expedition_list
+        expedition_list = self.expedition_list()
 
         number_of_recipients = len(expedition_list)
         if self.verbose:
