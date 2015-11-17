@@ -1,5 +1,6 @@
 """Command for sending the newsletter"""
 from threading import Thread
+import functools
 import signal
 import sys
 
@@ -18,6 +19,7 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
         verbose = int(options['verbosity'])
+        send_all = True
 
         if verbose:
             print 'Starting sending newsletters...'
@@ -29,7 +31,7 @@ class Command(NoArgsCommand):
 
         for sender in senders:
             worker = SMTPMailer(sender, verbose=verbose)
-            thread = Thread(target=worker.run, name=sender.name)
+            thread = Thread(target=functools.partial(worker.run, send_all), name=sender.name)
             workers.append((worker, thread))
 
         handler = term_handler(workers)
