@@ -309,7 +309,7 @@ class Mailer(NewsLetterSender):
         if credits <= 0:
             return []
         result_list = super(Mailer, self).expedition_list()
-        if send_all:
+        if not send_all:
             result_list = result_list[:credits]
         return result_list
 
