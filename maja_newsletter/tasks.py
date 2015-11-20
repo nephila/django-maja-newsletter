@@ -9,4 +9,4 @@ from maja_newsletter.models import Newsletter
 def celery_send_newsletter(newsletter):
     mailer = Mailer(newsletter)
     if mailer.can_send:
-        mailer.run()
+        mailer.run(send_all=True)
