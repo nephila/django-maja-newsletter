@@ -257,7 +257,7 @@ class Mailer(NewsLetterSender):
         start = datetime.now()
         delay = self.newsletter.server.delay()
 
-        expedition_list = self.expedition_list()
+        expedition_list = self.expedition_list(send_all)
 
         number_of_recipients = len(expedition_list)
         if self.verbose:
@@ -342,7 +342,7 @@ class SMTPMailer(object):
         self.verbose = verbose
         self.stop_event = threading.Event()
 
-    def run(self):
+    def run(self, send_all=False):
         """send mails
         """
         sending = dict()
@@ -358,7 +358,7 @@ class SMTPMailer(object):
         while (not self.stop_event.wait(sleep_time) and
                not self.stop_event.is_set()):
             if not roundrobin:
-                candidates = self.get_candidates()
+                candidates = self.get_candidates(send_all)
                 # refresh the list
                 for expedition in candidates:
                     if expedition.id not in sending and expedition.can_send:
@@ -401,9 +401,9 @@ class SMTPMailer(object):
 
         self.smtp.quit()
 
-    def get_candidates(self):
+    def get_candidates(self, send_all=False):
         """get candidates NL"""
-        return [NewsLetterExpedition(nl, self)
+        return [NewsLetterExpedition(nl, self, send_all)
                 for nl in Newsletter.objects.filter(server=self.server)]
 
     def smtp_connect(self):
@@ -418,11 +418,12 @@ class NewsLetterExpedition(NewsLetterSender):
     the mailer give it a chance to save status to db
     """
 
-    def __init__(self, newsletter, mailer):
+    def __init__(self, newsletter, mailer, send_all=False):
         super(NewsLetterExpedition, self).__init__(
                         newsletter, test=mailer.test, verbose=mailer.verbose)
         self.mailer = mailer
         self.id = newsletter.id
+        self.send_all = send_all
 
     def __call__(self):
         """iterator on messages to be sent
@@ -437,7 +438,7 @@ class NewsLetterExpedition(NewsLetterSender):
 
         self.attachments = self.build_attachments()
 
-        expedition_list = self.expedition_list()
+        expedition_list = self.expedition_list(self.send_all)
 
         number_of_recipients = len(expedition_list)
         if self.verbose:
