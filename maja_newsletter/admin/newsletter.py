@@ -4,6 +4,7 @@ from HTMLParser import HTMLParseError
 from django import forms
 from django.db import models
 from django.contrib import admin
+from django.db.transaction import atomic
 from django.utils.translation import ugettext_lazy as _
 
 from maja_newsletter.models import Contact
@@ -163,12 +164,13 @@ class BaseNewsletterAdmin(admin.ModelAdmin):
                 messages.warning(request, _('You do not have enough e-mail'))
                 sent_all = False
                 break
-            newsletter.status = Newsletter.WAITING
-            newsletter.server.emails_remains = newsletter.server.emails_remains - emails_to_send
-            newsletter.server.save()
-            newsletter.save()
-            if USE_CELERY:
-                celery_send_newsletter.delay(newsletter)
+            with atomic():
+                newsletter.status = Newsletter.WAITING
+                newsletter.server.emails_remains = newsletter.server.emails_remains - emails_to_send
+                newsletter.server.save()
+                newsletter.save()
+                if USE_CELERY:
+                    celery_send_newsletter.delay(newsletter)
         if sent_all:
             messages.success(request, _('%s newletters are ready to send') % queryset.count())
         # self.message_user(request, message)
