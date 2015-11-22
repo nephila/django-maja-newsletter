@@ -10,3 +10,4 @@ def celery_send_newsletter(newsletter):
     mailer = Mailer(newsletter)
     if mailer.can_send:
         mailer.run(send_all=True)
+    return mailer.can_send
