@@ -24,7 +24,7 @@ except ImportError:  # Python 2.4 compatibility
     from email.MIMEAudio import MIMEAudio
     from email.MIMEBase import MIMEBase
     from email.MIMEImage import MIMEImage
-from email import message_from_file
+from email import message_from_file, utils
 from html2text import html2text as html2text_orig
 from django.contrib.sites.models import Site
 from django.template import Context, Template
@@ -97,10 +97,12 @@ class NewsLetterSender(object):
 
         message = MIMEMultipart()
 
+        message['Message-Id'] = utils.make_msgid()
         message['Subject'] = self.build_title_content(contact)
         message['From'] = smart_str(self.newsletter.header_sender)
         message['Reply-to'] = smart_str(self.newsletter.header_reply)
         message['To'] = contact.mail_format()
+        message['Date'] = utils.formatdate()
 
         message_alt = MIMEMultipart('alternative')
         message_alt.attach(MIMEText(smart_str(content_text), 'plain', 'UTF-8'))
