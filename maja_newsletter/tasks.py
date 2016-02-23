@@ -6,7 +6,8 @@ from maja_newsletter.models import Newsletter
 
 
 @shared_task
-def celery_send_newsletter(newsletter):
+def celery_send_newsletter(newsletter, *args, **kwargs):
     mailer = Mailer(newsletter)
     if mailer.can_send:
         mailer.run(send_all=True)
+    return mailer.can_send
