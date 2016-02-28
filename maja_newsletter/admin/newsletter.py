@@ -4,7 +4,6 @@ from HTMLParser import HTMLParseError
 from django import forms
 from django.db import models
 from django.contrib import admin
-from django.db.transaction import atomic
 from django.utils.translation import ugettext_lazy as _
 
 from maja_newsletter.models import Contact
@@ -16,6 +15,8 @@ from maja_newsletter.settings import USE_TINYMCE
 from maja_newsletter.settings import USE_CELERY
 from maja_newsletter.settings import USE_WORKGROUPS
 from maja_newsletter.settings import USE_CKEDITOR
+from maja_newsletter.utils import wrap_transaction
+
 try:
     CAN_USE_PREMAILER = True
     from maja_newsletter.utils.premailer_old import Premailer
@@ -28,6 +29,7 @@ from maja_newsletter.utils.workgroups import request_workgroups_newsletters_pk
 from maja_newsletter.utils.workgroups import request_workgroups_mailinglists_pk
 
 from ..tasks import celery_send_newsletter
+
 
 class AttachmentAdminInline(admin.TabularInline):
     model = Attachment
@@ -164,7 +166,7 @@ class BaseNewsletterAdmin(admin.ModelAdmin):
                 messages.warning(request, _('You do not have enough e-mail'))
                 sent_all = False
                 break
-            with atomic():
+            with wrap_transaction():
                 newsletter.status = Newsletter.WAITING
                 newsletter.server.emails_remains = newsletter.server.emails_remains - emails_to_send
                 newsletter.server.save()
