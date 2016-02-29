@@ -53,10 +53,9 @@ class ContactAdmin(admin.ModelAdmin):
 
     def save_model(self, request, contact, form, change):
         workgroups = []
-        if not contact.pk and not request.user.is_superuser \
-               and USE_WORKGROUPS:
+        if not contact.pk and not request.user.is_superuser and USE_WORKGROUPS:
             workgroups = request_workgroups(request)
-        contact.save()
+        super(ContactAdmin, self).save_model(request, contact, form, change)
         for workgroup in workgroups:
             workgroup.contacts.add(contact)
 
