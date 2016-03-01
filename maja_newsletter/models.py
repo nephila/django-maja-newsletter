@@ -200,17 +200,22 @@ class MailingList(models.Model):
     modification_date = models.DateTimeField(_('modification date'), auto_now=True)
 
     def subscribers_count(self):
-        return self.subscribers.all().count()
+        try:
+            return self.subscribers.all().count()
+        except ValueError:
+            return 0
     subscribers_count.short_description = _('subscribers')
 
     def unsubscribers_count(self):
-        return self.unsubscribers.all().count()
+        try:
+            return self.unsubscribers.all().count()
+        except ValueError:
+            return 0
     unsubscribers_count.short_description = _('unsubscribers')
 
     def expedition_set(self):
         unsubscribers_id = self.unsubscribers.values_list('id', flat=True)
-        return self.subscribers.valid_subscribers().exclude(
-            id__in=unsubscribers_id)
+        return self.subscribers.valid_subscribers().exclude(id__in=unsubscribers_id)
 
     def __unicode__(self):
         return self.name
