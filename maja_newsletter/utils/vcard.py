@@ -40,3 +40,12 @@ def vcard_contacts_export_response(contacts, filename=''):
                             mimetype='text/x-vcard')
     response['Content-Disposition'] = 'attachment; filename=%s.vcf' % filename
     return response
+
+
+def make_vcard_content(data, output):
+    """Export vcards to a filesystem file"""
+    for contact in data:
+        output.write(vcard_contact_export(contact))
+    mimetype = 'text/x-vcard'
+    file_ext = 'vcf'
+    return output, mimetype, file_ext

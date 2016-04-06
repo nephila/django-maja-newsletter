@@ -53,3 +53,6 @@ NEWSLETTER_TINYMCE_TEMPLATE_URL = getattr(settings, 'NEWSLETTER_TINYMCE_TEMPLATE
 CKEDITOR_SETTINGS = getattr(settings, 'NEWSLETTER_CKEDITOR_SETTINGS', getattr(settings, 'CKEDITOR_SETTINGS', {}))
 
 USE_CELERY = getattr(settings, 'NEWSLETTER_USE_CELERY', False)
+
+EXPORT_FILE_NAME = getattr(settings, 'NEWSLETTER_EXPORT_FILE_NAME', 'exported_contacts')
+EXPORT_EMAIL_SUBJECT = getattr(settings, 'NEWSLETTER_EXPORT_EMAIL_SUBJECT', 'exported_contacts')
