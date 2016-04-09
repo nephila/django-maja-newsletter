@@ -1,5 +1,5 @@
 """maja_newsletter"""
-__version__ = '0.6.1.a1'
+__version__ = '0.6.1.a3'
 __license__ = 'BSD License'
 
 __author__ = 'Iacopo Spalletti'
