@@ -4,7 +4,12 @@ import datetime
 import pytz
 
 from django.conf import settings
-from django.db.models.query import QuerySet, ValuesQuerySet
+try:
+    from django.db.models.query import QuerySet
+
+    ValuesQuerySet = QuerySet
+except ImportError:
+    from django.db.models.query import QuerySet, ValuesQuerySet
 from django.http import HttpResponse
 from django.utils import timezone
 
