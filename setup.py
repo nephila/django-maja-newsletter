@@ -31,7 +31,7 @@ setup(name='django-maja-newsletter',
       install_requires=[
           'setuptools',
           'html2text',
-          'python-dateutil==1.5',
+          'python-dateutil',
           'BeautifulSoup',
           'django-tagging',
           'vobject',
