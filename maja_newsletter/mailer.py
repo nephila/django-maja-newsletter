@@ -207,9 +207,7 @@ class NewsLetterSender(object):
 
     def update_contact_status(self, contact, exception):
         if exception is None:
-            status = (self.test
-                      and ContactMailingStatus.SENT_TEST
-                      or ContactMailingStatus.SENT)
+            status = (self.test and ContactMailingStatus.SENT_TEST or ContactMailingStatus.SENT)
         elif isinstance(exception, (UnicodeError, SMTPRecipientsRefused)):
             status = ContactMailingStatus.INVALID
             contact.valid = False
