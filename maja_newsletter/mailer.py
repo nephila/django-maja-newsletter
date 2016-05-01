@@ -269,10 +269,8 @@ class Mailer(NewsLetterSender):
 
                 self.update_contact_status(contact, exception)
 
-                sleep_time = (delay * i - total_seconds(now() - start))
-
-                if SLEEP_BETWEEN_SENDING and sleep_time:
-                    time.sleep(sleep_time)
+                if SLEEP_BETWEEN_SENDING and delay:
+                    time.sleep(delay)
                 if RESTART_CONNECTION_BETWEEN_SENDING:
                     self.smtp.quit()
                     self.smtp_connect()
@@ -337,7 +335,6 @@ class SMTPMailer(object):
         delay = self.server.delay()
 
         i = 1
-        sleep_time = 0
         while (not self.stop_event.wait(sleep_time) and
                not self.stop_event.is_set()):
             if not roundrobin:
@@ -365,10 +362,8 @@ class SMTPMailer(object):
                 else:
                     nl.next()
 
-                sleep_time = (delay * i -
-                              total_seconds(now() - self.start))
-                if SLEEP_BETWEEN_SENDING:
-                    sleep_time = max(time.sleep(SLEEP_BETWEEN_SENDING), sleep_time)
+                if SLEEP_BETWEEN_SENDING and delay:
+                    time.sleep(delay)
                 if RESTART_CONNECTION_BETWEEN_SENDING:
                     self.smtp.quit()
                     self.smtp_connect()
