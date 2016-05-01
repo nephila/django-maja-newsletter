@@ -119,9 +119,10 @@ class ContactAdmin(admin.ModelAdmin):
     def create_mailinglist(self, request, queryset):
         """Create a mailing list from selected contact"""
         when = str(now()).split('.')[0]
-        new_mailing = MailingList(name=_('New mailinglist at %s') % when,
-                                  description=_('New mailing list created in admin at %s') % when)
-        new_mailing.save()
+        new_mailing = MailingList.objects.create(
+            name=_('New mailinglist at %s') % when,
+            description=_('New mailing list created in admin at %s') % when
+        )
 
         if 'lite' in settings.DATABASES['default']['ENGINE']:
             self.message_user(request, _('SQLite3 or a SpatialLite database type detected, ' \
@@ -131,6 +132,7 @@ class ContactAdmin(admin.ModelAdmin):
             new_mailing.subscribers = queryset.all()
         except DatabaseError:
             new_mailing.subscribers = queryset.none()
+        new_mailing.save()
 
         if not request.user.is_superuser and USE_WORKGROUPS:
             for workgroup in request_workgroups(request):
