@@ -9,6 +9,7 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 
+from maja_newsletter import settings
 from maja_newsletter.models import Contact
 from maja_newsletter.models import MailingList
 from maja_newsletter.settings import USE_WORKGROUPS
@@ -35,6 +36,14 @@ class MailingListAdmin(admin.ModelAdmin):
     actions = ['merge_mailinglist']
     actions_on_top = False
     actions_on_bottom = True
+
+    def has_delete_permission(self, request, obj=None):
+        if obj:
+            if obj.subscribers.count() > settings.MAILINGLIST_DELETE_THRESHOLD:
+                return False
+            else:
+                return True
+        return False
 
     def queryset(self, request):
         queryset = super(MailingListAdmin, self).queryset(request)
