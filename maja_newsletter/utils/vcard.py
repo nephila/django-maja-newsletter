@@ -1,9 +1,8 @@
 """VCard system for exporting Contact models"""
-from datetime import datetime
-
 import vobject
 
 from django.http import HttpResponse
+from django.utils.timezone import now
 
 
 def vcard_contact_export(contact):
@@ -33,7 +32,7 @@ def vcard_contacts_export(contacts):
 def vcard_contacts_export_response(contacts, filename=''):
     """Return VCard contacts attached in a HttpResponse"""
     if not filename:
-        filename = 'contacts_edn_%s' % datetime.now().strftime('%d-%m-%Y')
+        filename = 'contacts_edn_%s' % now().strftime('%d-%m-%Y')
     filename = filename.replace(' ', '_')
 
     response = HttpResponse(vcard_contacts_export(contacts),

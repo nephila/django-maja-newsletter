@@ -28,20 +28,23 @@ UNSUBSCRIBE_ALL = getattr(settings, 'NEWSLETTER_UNSUBSCRIBE_ALL', False)
 UNIQUE_KEY_LENGTH = getattr(settings, 'NEWSLETTER_UNIQUE_KEY_LENGTH', 8)
 UNIQUE_KEY_CHAR_SET = getattr(settings, 'NEWSLETTER_UNIQUE_KEY_CHAR_SET', string.ascii_uppercase + string.digits)
 
-DEFAULT_HEADER_SENDER = getattr(settings, 'NEWSLETTER_DEFAULT_HEADER_SENDER',
-                                'Maja Newsletter<noreply@example.com>')
-DEFAULT_HEADER_REPLY = getattr(settings, 'NEWSLETTER_DEFAULT_HEADER_REPLY',
-                               DEFAULT_HEADER_SENDER)
+DEFAULT_HEADER_SENDER = getattr(
+    settings, 'NEWSLETTER_DEFAULT_HEADER_SENDER', 'Maja Newsletter<noreply@example.com>'
+)
+DEFAULT_HEADER_REPLY = getattr(
+    settings, 'NEWSLETTER_DEFAULT_HEADER_REPLY', DEFAULT_HEADER_SENDER
+)
 
 TRACKING_LINKS = getattr(settings, 'NEWSLETTER_TRACKING_LINKS', True)
 TRACKING_IMAGE_FORMAT = getattr(settings, 'NEWSLETTER_TRACKING_IMAGE_FORMAT', 'jpg')
-TRACKING_IMAGE = getattr(settings, 'NEWSLETTER_TRACKING_IMAGE',
-                         BASE64_IMAGES[TRACKING_IMAGE_FORMAT])
+TRACKING_IMAGE = getattr(
+    settings, 'NEWSLETTER_TRACKING_IMAGE', BASE64_IMAGES[TRACKING_IMAGE_FORMAT]
+)
 
-SLEEP_BETWEEN_SENDING = getattr(
-    settings, 'NEWSLETTER_SLEEP_BETWEEN_SENDING', 0)
+SLEEP_BETWEEN_SENDING = getattr(settings, 'NEWSLETTER_SLEEP_BETWEEN_SENDING', True)
 RESTART_CONNECTION_BETWEEN_SENDING = getattr(
-    settings, 'NEWSLETTER_RESTART_CONNECTION_BETWEEN_SENDING', False)
+    settings, 'NEWSLETTER_RESTART_CONNECTION_BETWEEN_SENDING', False
+)
 
 BASE_PATH = getattr(settings, 'NEWSLETTER_BASE_PATH', 'upload/newsletter')
 
