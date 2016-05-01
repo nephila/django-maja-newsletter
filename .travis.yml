@@ -51,3 +51,8 @@ matrix:
     env: DJANGO='django16'
   - python: 3.5
     env: DJANGO='django17'
+
+cache:
+   directories:
+     - $HOME/.pip-accel
+     - $HOME/.cache/pip

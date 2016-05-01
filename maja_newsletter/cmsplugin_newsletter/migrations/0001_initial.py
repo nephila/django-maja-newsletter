@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('cms', '0013_urlconfrevision'),
+        ('cms', '__latest__'),
         ('maja_newsletter', '0001_initial'),
     ]
 

@@ -7,15 +7,15 @@ class ContactManager(models.Manager):
 
     def subscribers(self):
         """Return all subscribers"""
-        return self.get_query_set().filter(subscriber=True)
+        return self.get_queryset().filter(subscriber=True)
 
     def unsubscribers(self):
         """Return all unsubscribers"""
-        return self.get_query_set().filter(subscriber=False)
+        return self.get_queryset().filter(subscriber=False)
 
     def valids(self):
         """Return only valid contacts"""
-        return self.get_query_set().filter(valid=True)
+        return self.get_queryset().filter(valid=True)
 
     def valid_subscribers(self):
         """Return only valid subscribers"""

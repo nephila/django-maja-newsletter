@@ -5,6 +5,8 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
+from django.utils.timezone import now
+
 import maja_newsletter.models
 import tagging.fields
 
@@ -14,8 +16,8 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('contenttypes', '0002_remove_content_type_name'),
-        ('auth', '0007_alter_validators_add_error_messages'),
+        ('contenttypes', '__latest__'),
+        ('auth', '__latest__'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
