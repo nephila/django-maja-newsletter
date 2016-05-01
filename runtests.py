@@ -22,6 +22,7 @@ def main():
             from django.conf import settings
             setattr(settings, 'STATIC_ROOT', STATIC_ROOT)
             setattr(settings, 'MEDIA_ROOT', MEDIA_ROOT)
+            setattr(settings, 'NEWSLETTER_SLEEP_BETWEEN_SENDING', False)
             from django.test.utils import get_runner
             TestRunner = get_runner(settings)
 

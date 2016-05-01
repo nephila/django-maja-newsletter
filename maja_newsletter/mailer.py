@@ -1,26 +1,26 @@
 """Mailer for maja_newsletter"""
 import mimetypes
-import re
 import sys
 import threading
 import time
-from StringIO import StringIO
+from datetime import timedelta
 from email import message_from_file, utils
+from email.encoders import encode_base64
+from email.mime.base import MIMEBase
+from email.mime.image import MIMEImage
+from email.mime.audio import MIMEAudio
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from random import sample
 from smtplib import SMTPRecipientsRefused
 
-from datetime import timedelta
+import re
 from django.contrib.sites.models import Site
 from django.template import Context, Template
 from django.template.loader import render_to_string
 from django.utils.encoding import smart_text
+from django.utils.six import StringIO
 from django.utils.timezone import now
-from email.mime.Encoders import encode_base64
-from email.mime.MIMEAudio import MIMEAudio
-from email.mime.MIMEBase import MIMEBase
-from email.mime.MIMEImage import MIMEImage
 from html2text import html2text as html2text_orig
 
 from maja_newsletter.models import ContactMailingStatus
@@ -249,7 +249,7 @@ class Mailer(NewsLetterSender):
             if not ContactMailingStatus.objects.filter(
                     status=ContactMailingStatus.SENT, contact_id=contact.pk,
                     newsletter_id=self.newsletter.pk
-            ).exists():
+            ).exists() or self.test:
                 if self.verbose:
                     print('- Processing %s/%s (%s)' % (i, number_of_recipients, contact.pk))
 

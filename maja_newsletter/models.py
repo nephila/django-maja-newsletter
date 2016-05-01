@@ -1,4 +1,5 @@
 """Models for maja_newsletter"""
+from datetime import timedelta
 from smtplib import SMTP
 from smtplib import SMTPHeloError
 
