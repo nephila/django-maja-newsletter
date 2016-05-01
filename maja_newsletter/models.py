@@ -1,20 +1,18 @@
 """Models for maja_newsletter"""
 from smtplib import SMTP
 from smtplib import SMTPHeloError
-from datetime import datetime
-from datetime import timedelta
 
 try:
     from django.contrib.contenttypes.fields import GenericForeignKey
 except:
     from django.contrib.contenttypes.generic import GenericForeignKey
-from django.db import models
-from django.utils.encoding import smart_str
-from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext_lazy as _
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Group, User
-from django.utils.encoding import force_unicode
+from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import reverse
+from django.db import models
+from django.utils.encoding import force_unicode, smart_str
+from django.utils.translation import ugettext_lazy as _
+from django.utils.timezone import now
 
 from tagging.fields import TagField
 from maja_newsletter.managers import ContactManager
@@ -102,7 +100,7 @@ class SMTPServer(models.Model):
         if not self.mails_hour:
             return self.emails_remains
 
-        last_hour = datetime.now() - timedelta(hours=1)
+        last_hour = now() - timedelta(hours=1)
         sent_last_hour = ContactMailingStatus.objects.filter(
             models.Q(status=ContactMailingStatus.SENT) |
             models.Q(status=ContactMailingStatus.SENT_TEST),
@@ -263,7 +261,7 @@ class Newsletter(models.Model):
                                     default=DEFAULT_HEADER_REPLY)
 
     status = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=DRAFT)
-    sending_date = models.DateTimeField(_('sending date'), default=datetime.now)
+    sending_date = models.DateTimeField(_('sending date'), default=now)
 
     slug = models.SlugField(help_text=_('Used for displaying the newsletter on the site.'),
                             max_length=255, unique=True)

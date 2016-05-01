@@ -1,12 +1,12 @@
 """Utils for importation of contacts"""
 import csv
-from datetime import datetime
 
 import xlrd
 import vobject
 
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
 from tagging.models import Tag
@@ -47,7 +47,7 @@ def create_contacts(contact_dicts, importer_name, workgroups=[]):
     """Create all the contacts to import and
     associated them in a mailing list"""
     inserted = 0
-    when = str(datetime.now()).split('.')[0]
+    when = str(now()).split('.')[0]
     mailing_list = MailingList(
         name=_('Mailing list created by importation at %s') % when,
         description=_('Contacts imported by %s.') % importer_name)

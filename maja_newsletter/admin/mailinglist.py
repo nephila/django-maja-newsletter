@@ -1,12 +1,11 @@
 """ModelAdmin for MailingList"""
-from datetime import datetime
-
 from django.contrib import admin
 from django.conf.urls import url
 from django.conf.urls import patterns
 from django.utils.encoding import smart_str
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
+from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 
@@ -75,7 +74,7 @@ class MailingListAdmin(admin.ModelAdmin):
             for contact in ml.unsubscribers.all():
                 unsubscribers[contact] = ''
 
-        when = str(datetime.now()).split('.')[0]
+        when = str(now()).split('.')[0]
         new_mailing = MailingList(name=_('Merging list at %s') % when,
                                   description=_('Mailing list created by merging at %s') % when)
         new_mailing.save()
