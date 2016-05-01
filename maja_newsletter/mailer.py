@@ -216,7 +216,7 @@ class NewsLetterSender(object):
             contact.save()
         else:
             # signal error
-            print >>sys.stderr, 'smtp connection raises %s' % exception
+            sys.stderr.write('smtp connection raises %s\n' % exception)
             status = ContactMailingStatus.ERROR
 
         ContactMailingStatus.objects.create(
@@ -260,7 +260,7 @@ class Mailer(NewsLetterSender):
                     self.smtp.sendmail(smart_text(self.newsletter.header_sender),
                                        contact.email,
                                        message.as_string())
-                except Exception, e:
+                except Exception as e:
                     exception = e
                     if self.verbose:
                         print(e)
@@ -362,7 +362,7 @@ class SMTPMailer(object):
                     self.smtp.sendmail(*nl.next())
                 except StopIteration:
                     del sending[nl_id]
-                except Exception, e:
+                except Exception as e:
                     nl.throw(e)
                 else:
                     nl.next()
@@ -443,7 +443,7 @@ class NewsLetterExpedition(NewsLetterSender):
                     yield (smart_text(self.newsletter.header_sender),
                                        contact.email,
                                        message.as_string())
-                except Exception, e:
+                except Exception as e:
                     exception = e
                     if self.verbose:
                         print(e)
