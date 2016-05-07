@@ -9,6 +9,7 @@ HELPER_SETTINGS = dict(
         'maja_newsletter',
     ],
     NEWSLETTER_SLEEP_BETWEEN_SENDING=False,
+    SOUTH_TESTS_MIGRATE=False,
 )
 
 
