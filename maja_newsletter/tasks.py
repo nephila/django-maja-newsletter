@@ -11,17 +11,22 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 
 from maja_newsletter.mailer import Mailer
+from maja_newsletter.models import Newsletter
 from maja_newsletter.utils.excel import make_excel_content
 from maja_newsletter.utils.vcard import make_vcard_content
 from maja_newsletter.settings import EXPORT_FILE_NAME, EXPORT_EMAIL_SUBJECT
 
 
 @shared_task
-def celery_send_newsletter(newsletter, *args, **kwargs):
-    mailer = Mailer(newsletter)
-    if mailer.can_send:
-        mailer.run(send_all=True)
-    return mailer.can_send
+def celery_send_newsletter(newsletter_id, *args, **kwargs):
+    try:
+        newsletter = Newsletter.objects.get(pk=newsletter_id)
+        mailer = Mailer(newsletter)
+        if mailer.can_send:
+            mailer.run(send_all=True)
+        return mailer.can_send
+    except Newsletter.DoesNotExist:
+        return False
 
 
 @shared_task

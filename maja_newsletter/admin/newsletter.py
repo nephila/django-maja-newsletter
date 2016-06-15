@@ -172,7 +172,7 @@ class BaseNewsletterAdmin(admin.ModelAdmin):
                 newsletter.server.save()
                 newsletter.save()
                 if USE_CELERY:
-                    celery_send_newsletter.apply_async((newsletter,), eta=newsletter.sending_date)
+                    celery_send_newsletter.apply_async((newsletter.pk,), eta=newsletter.sending_date)
         if sent_all:
             messages.success(request, _('%s newletters are ready to send') % queryset.count())
         # self.message_user(request, message)
