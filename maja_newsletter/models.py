@@ -1,17 +1,19 @@
 """Models for maja_newsletter"""
+from datetime import timedelta
 from smtplib import SMTP
 from smtplib import SMTPHeloError
-from datetime import datetime
-from datetime import timedelta
 
-from django.db import models
-from django.utils.encoding import smart_str
-from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext_lazy as _
-from django.contrib.contenttypes import generic
-from django.contrib.contenttypes.models import ContentType
+try:
+    from django.contrib.contenttypes.fields import GenericForeignKey
+except:
+    from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.auth.models import Group, User
-from django.utils.encoding import force_unicode
+from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import reverse
+from django.db import models
+from django.utils.encoding import force_unicode, smart_str
+from django.utils.translation import ugettext_lazy as _
+from django.utils.timezone import now
 
 from tagging.fields import TagField
 from maja_newsletter.managers import ContactManager
@@ -99,7 +101,7 @@ class SMTPServer(models.Model):
         if not self.mails_hour:
             return self.emails_remains
 
-        last_hour = datetime.now() - timedelta(hours=1)
+        last_hour = now() - timedelta(hours=1)
         sent_last_hour = ContactMailingStatus.objects.filter(
             models.Q(status=ContactMailingStatus.SENT) |
             models.Q(status=ContactMailingStatus.SENT_TEST),
@@ -140,7 +142,7 @@ class Contact(models.Model):
 
     content_type = models.ForeignKey(ContentType, blank=True, null=True)
     object_id = models.PositiveIntegerField(blank=True, null=True)
-    content_object = generic.GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey('content_type', 'object_id')
 
     creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
     modification_date = models.DateTimeField(_('modification date'), auto_now=True)
@@ -194,7 +196,7 @@ class MailingList(models.Model):
                                          related_name='mailinglist_subscriber')
     unsubscribers = models.ManyToManyField(Contact, verbose_name=_('unsubscribers'),
                                            related_name='mailinglist_unsubscriber',
-                                           null=True, blank=True)
+                                           blank=True)
 
     creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
     modification_date = models.DateTimeField(_('modification date'), auto_now=True)
@@ -250,7 +252,7 @@ class Newsletter(models.Model):
 
     mailing_list = models.ForeignKey(MailingList, verbose_name=_('mailing list'))
     test_contacts = models.ManyToManyField(Contact, verbose_name=_('test contacts'),
-                                           blank=True, null=True)
+                                           blank=True)
 
     server = models.ForeignKey(SMTPServer, verbose_name=_('smtp server'),
                                default=1)
@@ -260,7 +262,7 @@ class Newsletter(models.Model):
                                     default=DEFAULT_HEADER_REPLY)
 
     status = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=DRAFT)
-    sending_date = models.DateTimeField(_('sending date'), default=datetime.now)
+    sending_date = models.DateTimeField(_('sending date'), default=now)
 
     slug = models.SlugField(help_text=_('Used for displaying the newsletter on the site.'),
                             max_length=255, unique=True)
@@ -313,12 +315,13 @@ class Link(models.Model):
         db_table = 'newsletter_link'
 
 
+def get_newsletter_storage_path(self, filename):
+    filename = force_unicode(filename)
+    return '/'.join([BASE_PATH, self.newsletter.slug, filename])
+
+
 class Attachment(models.Model):
     """Attachment file in a newsletter"""
-
-    def get_newsletter_storage_path(self, filename):
-        filename = force_unicode(filename)
-        return '/'.join([BASE_PATH, self.newsletter.slug, filename])
 
     newsletter = models.ForeignKey(Newsletter, verbose_name=_('newsletter'))
     title = models.CharField(_('title'), max_length=255)
@@ -383,12 +386,9 @@ class WorkGroup(models.Model):
     name = models.CharField(_('name'), max_length=255)
     group = models.ForeignKey(Group, verbose_name=_('permissions group'))
 
-    contacts = models.ManyToManyField(Contact, verbose_name=_('contacts'),
-                                      blank=True, null=True)
-    mailinglists = models.ManyToManyField(MailingList, verbose_name=_('mailing lists'),
-                                          blank=True, null=True)
-    newsletters = models.ManyToManyField(Newsletter, verbose_name=_('newsletters'),
-                                         blank=True, null=True)
+    contacts = models.ManyToManyField(Contact, verbose_name=_('contacts'), blank=True)
+    mailinglists = models.ManyToManyField(MailingList, verbose_name=_('mailing lists'), blank=True)
+    newsletters = models.ManyToManyField(Newsletter, verbose_name=_('newsletters'), blank=True)
 
     def __unicode__(self):
         return self.name

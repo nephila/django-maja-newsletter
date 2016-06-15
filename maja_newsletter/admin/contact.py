@@ -1,30 +1,29 @@
 """ModelAdmin for Contact"""
 import StringIO
-from django.conf import settings
-from datetime import datetime
 
-from django.contrib import admin
-from django.dispatch import Signal
-from django.conf.urls import url
+from django.conf import settings
 from django.conf.urls import patterns
+from django.conf.urls import url
+from django.contrib import admin
+from django.contrib.admin.views.main import ChangeList
 from django.core.urlresolvers import reverse
+from django.db import DatabaseError
+from django.dispatch import Signal
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
-from django.http import HttpResponseRedirect
-from django.contrib.admin.views.main import ChangeList
-from django.db import DatabaseError
 
 from maja_newsletter.models import MailingList
 from maja_newsletter.settings import USE_CELERY
 from maja_newsletter.settings import USE_WORKGROUPS
 from maja_newsletter.tasks import export_excel, export_vcard
+from maja_newsletter.utils.excel import ExcelResponse
 from maja_newsletter.utils.importation import import_dispatcher
+from maja_newsletter.utils.vcard import vcard_contacts_export_response
 from maja_newsletter.utils.workgroups import request_workgroups
 from maja_newsletter.utils.workgroups import request_workgroups_contacts_pk
-from maja_newsletter.utils.vcard import vcard_contacts_export_response
-from maja_newsletter.utils.excel import ExcelResponse
-
 
 contacts_imported = Signal(providing_args=['source', 'type'])
 
@@ -84,7 +83,7 @@ class ContactAdmin(admin.ModelAdmin):
     def export_vcard(self, request, queryset, export_name=''):
         """Export selected contact in VCard"""
         if not export_name:
-            export_name = 'contacts_edn_%s' % datetime.now().strftime('%d-%m-%Y')
+            export_name = 'contacts_edn_%s' % now().strftime('%d-%m-%Y')
         queryset = queryset.prefetch_related('content_object')
         if USE_CELERY:
             export_vcard.delay(queryset, request.user.email, export_name)
@@ -96,7 +95,7 @@ class ContactAdmin(admin.ModelAdmin):
     def export_excel(self, request, queryset, export_name=''):
         """Export selected contact in Excel"""
         if not export_name:
-            export_name = 'contacts_edn_%s' % datetime.now().strftime('%d-%m-%Y')
+            export_name = 'contacts_edn_%s' % now().strftime('%d-%m-%Y')
         queryset = queryset.prefetch_related('content_object')
         if USE_CELERY:
             export_excel.delay(queryset, request.user.email, export_name)
@@ -119,10 +118,11 @@ class ContactAdmin(admin.ModelAdmin):
 
     def create_mailinglist(self, request, queryset):
         """Create a mailing list from selected contact"""
-        when = str(datetime.now()).split('.')[0]
-        new_mailing = MailingList(name=_('New mailinglist at %s') % when,
-                                  description=_('New mailing list created in admin at %s') % when)
-        new_mailing.save()
+        when = str(now()).split('.')[0]
+        new_mailing = MailingList.objects.create(
+            name=_('New mailinglist at %s') % when,
+            description=_('New mailing list created in admin at %s') % when
+        )
 
         if 'lite' in settings.DATABASES['default']['ENGINE']:
             self.message_user(request, _('SQLite3 or a SpatialLite database type detected, ' \
@@ -132,6 +132,7 @@ class ContactAdmin(admin.ModelAdmin):
             new_mailing.subscribers = queryset.all()
         except DatabaseError:
             new_mailing.subscribers = queryset.none()
+        new_mailing.save()
 
         if not request.user.is_superuser and USE_WORKGROUPS:
             for workgroup in request_workgroups(request):
@@ -187,12 +188,12 @@ class ContactAdmin(admin.ModelAdmin):
     def exportation_vcard(self, request):
         """Export filtered contacts in VCard"""
         return self.export_vcard(request, self.filtered_request_queryset(request),
-                                 'contacts_edn_%s' % datetime.now().strftime('%d-%m-%Y'))
+                                 'contacts_edn_%s' % now().strftime('%d-%m-%Y'))
 
     def exportation_excel(self, request):
         """Export filtered contacts in Excel"""
         return self.export_excel(request, self.filtered_request_queryset(request),
-                                 'contacts_edn_%s' % datetime.now().strftime('%d-%m-%Y'))
+                                 'contacts_edn_%s' % now().strftime('%d-%m-%Y'))
 
     def get_urls(self):
         urls = super(ContactAdmin, self).get_urls()

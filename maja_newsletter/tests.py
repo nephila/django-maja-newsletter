@@ -1,9 +1,10 @@
 """Unit tests for maja_newsletter"""
-from datetime import datetime
 from datetime import timedelta
 from django.contrib.sites.models import Site
 from django.template import Context
 from django.template.defaultfilters import slugify
+from django.utils.timezone import now
+
 from maja_newsletter.utils.newsletter import track_links
 from tempfile import NamedTemporaryFile
 
@@ -291,10 +292,10 @@ class MailerTestCase(TestCase):
 
         # Checks expedition time
         self.newsletter.status = Newsletter.WAITING
-        self.newsletter.sending_date = datetime.now() + timedelta(hours=1)
+        self.newsletter.sending_date = now() + timedelta(hours=1)
         mailer = Mailer(self.newsletter)
         self.assertFalse(mailer.can_send)
-        self.newsletter.sending_date = datetime.now()
+        self.newsletter.sending_date = now()
         mailer = Mailer(self.newsletter)
         self.assertTrue(mailer.can_send)
 

@@ -1,15 +1,15 @@
 """ModelAdmin for MailingList"""
-from datetime import datetime
-
 from django.contrib import admin
 from django.conf.urls import url
 from django.conf.urls import patterns
 from django.utils.encoding import smart_str
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
+from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 
+from maja_newsletter import settings
 from maja_newsletter.models import Contact
 from maja_newsletter.models import MailingList
 from maja_newsletter.settings import USE_WORKGROUPS
@@ -36,6 +36,14 @@ class MailingListAdmin(admin.ModelAdmin):
     actions = ['merge_mailinglist']
     actions_on_top = False
     actions_on_bottom = True
+
+    def has_delete_permission(self, request, obj=None):
+        if obj:
+            if obj.subscribers.count() > settings.MAILINGLIST_DELETE_THRESHOLD:
+                return False
+            else:
+                return True
+        return False
 
     def queryset(self, request):
         queryset = super(MailingListAdmin, self).queryset(request)
@@ -75,7 +83,7 @@ class MailingListAdmin(admin.ModelAdmin):
             for contact in ml.unsubscribers.all():
                 unsubscribers[contact] = ''
 
-        when = str(datetime.now()).split('.')[0]
+        when = str(now()).split('.')[0]
         new_mailing = MailingList(name=_('Merging list at %s') % when,
                                   description=_('Mailing list created by merging at %s') % when)
         new_mailing.save()
