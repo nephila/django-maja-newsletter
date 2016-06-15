@@ -335,6 +335,7 @@ class SMTPMailer(object):
         delay = self.server.delay()
 
         i = 1
+        sleep_time = 0
         while (not self.stop_event.wait(sleep_time) and
                not self.stop_event.is_set()):
             if not roundrobin:
