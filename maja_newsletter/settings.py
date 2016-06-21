@@ -51,6 +51,7 @@ RESTART_CONNECTION_BETWEEN_SENDING = getattr(
 )
 
 BASE_PATH = getattr(settings, 'NEWSLETTER_BASE_PATH', 'upload/newsletter')
+VERBOSE_MAILER = getattr(settings, 'NEWSLETTER_VERBOSE_MAILER', False)
 
 # NPH
 # Relative to MEDIA_ROOT
