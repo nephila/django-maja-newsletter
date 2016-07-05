@@ -20,7 +20,7 @@ from maja_newsletter.settings import EXPORT_FILE_NAME, EXPORT_EMAIL_SUBJECT, VER
 def celery_send_newsletter(newsletter_id, *args, **kwargs):
     try:
         newsletter = Newsletter.objects.get(pk=newsletter_id)
-        mailer = Mailer(newsletter, verbose=settings.VERBOSE_MAILER)
+        mailer = Mailer(newsletter, verbose=VERBOSE_MAILER)
         if mailer.can_send:
             mailer.run(send_all=True)
         return mailer.can_send
