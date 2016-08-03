@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from maja_newsletter.models import SMTPServer, SendBatch
+from maja_newsletter.utils import DJANGO_1_6
 
 
 class SMTPServerAdminForm(forms.ModelForm):
@@ -23,7 +24,8 @@ class SMTPServerAdminForm(forms.ModelForm):
 
     class Meta:
         model = SMTPServer
-        fields = '__all__'
+        if not DJANGO_1_6:
+            fields = '__all__'
 
 
 class SendBatchInlineForm(forms.ModelForm):
@@ -35,7 +37,8 @@ class SendBatchInlineForm(forms.ModelForm):
 
     class Meta:
         models = SendBatch
-        fields = '__all__'
+        if not DJANGO_1_6:
+            fields = '__all__'
 
 
 class SendBatchInline(admin.TabularInline):
