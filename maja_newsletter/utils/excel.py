@@ -39,10 +39,10 @@ def _make_naive(value):
 
 def make_excel_content(data, output=None, headers=None, force_csv=False, encoding='utf8'):
     valid_data = False
-    if isinstance(data, ValuesQuerySet):
-        data = list(data)
-    elif isinstance(data, QuerySet):
+    if isinstance(data, QuerySet):
         data = list(data.values())
+    elif isinstance(data, ValuesQuerySet):
+        data = list(data)
     if hasattr(data, '__getitem__'):
         if isinstance(data[0], dict):
             if headers is None:
