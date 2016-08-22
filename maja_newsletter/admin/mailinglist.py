@@ -43,7 +43,7 @@ class MailingListAdmin(admin.ModelAdmin):
                 return False
             else:
                 return True
-        return False
+        return not settings.MAILINGLIST_DELETE_SAFE
 
     def queryset(self, request):
         queryset = super(MailingListAdmin, self).queryset(request)
