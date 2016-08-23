@@ -21,11 +21,11 @@ csv.register_dialect('edn', delimiter=';')
 
 def create_contact(contact_dict, workgroups=[]):
     """Create a contact and validate the mail"""
-    contact_dict['email'] = contact_dict['email'].strip()
     try:
+        contact_dict['email'] = contact_dict['email'].strip()
         validate_email(contact_dict['email'])
         contact_dict['valid'] = True
-    except ValidationError:
+    except (ValidationError, AttributeError):
         contact_dict['valid'] = False
 
     contact, created = Contact.objects.get_or_create(

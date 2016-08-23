@@ -7,6 +7,7 @@ from django.conf import settings
 from django.http import HttpResponseNotFound
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from maja_newsletter.utils import DJANGO_1_7
 
 
 def view_ckeditor_templates(request):
@@ -34,6 +35,10 @@ def view_ckeditor_templates(request):
             'templates': templates
         }
         context = RequestContext(request, data)
-        return render_to_response('newsletter/utils/ckeditor_templates.html', context,
-                                  mimetype='application/javascript')
+        if DJANGO_1_7:
+            return render_to_response('newsletter/utils/ckeditor_templates.html', context,
+                                      mimetype='application/javascript')
+        else:
+            return render_to_response('newsletter/utils/ckeditor_templates.html', context,
+                                      content_type='application/javascript')
     return HttpResponseNotFound('Templates not set')

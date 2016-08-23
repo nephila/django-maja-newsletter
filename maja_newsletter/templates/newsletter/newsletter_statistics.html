@@ -1,13 +1,9 @@
-{% extends "admin/base_site.html" %}
+{% extends "admin/change_list.html" %}
 {% load i18n static %}
 
-{% block coltype %}colMS{% endblock %}
+{% block bodyclass %}change-list{% endblock %}
 
-{% block bodyclass %}dashboard{% endblock %}
-
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static 'admin/css/dashboard.css' %}" />{% endblock %}
-
-{% block extrahead %}
+{% block extrahead %}{{ block.super }}
 <script type="text/javascript" src="{{ STATIC_URL }}edn/js/jquery.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}edn/js/jquery.form.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}edn/js/swfobject/swfobject.js"></script>
@@ -33,7 +29,7 @@ if (typeof(Control == "undefined")) {var Control = {OFC: OFC.jquery}}
 function save_image() { OFC.jquery.popup('charts_view'); }
 
 $(document).ready(function(){
-  swfobject.embedSWF("{{ STATIC_URL }}edn/swf/open-flash-chart.swf", "charts_view", "498", "350", "9.0.0",
+  swfobject.embedSWF("{{ STATIC_URL }}edn/swf/open-flash-chart.swf", "charts_view", "100%", "350", "9.0.0",
                      "{{ STATIC_URL }}edn/js/swfobject/expressInstall.swf",
                      {"data-file": "{% url 'newsletter_newsletter_charts' object.slug %}"});
 
@@ -55,159 +51,152 @@ $(document).ready(function(){
     }
   };
 
-  var options = {success: reload_charts,
-                 beforeSubmit: validate};
+  var options = {success: reload_charts, beforeSubmit: validate};
   $("#period_selector").ajaxForm(options);
 });
 </script>
-{% endblock %}
-
-{% block breadcrumbs %}
-{% if not is_popup %}
-<div class="breadcrumbs">
-     <a href="{% url 'admin:index' %}">{% trans "Admin." %}</a> &rsaquo;
-     <a href="{% url 'admin:app_list' 'newsletter' %}">{{ app_label|capfirst|escape }}</a> &rsaquo;
-     <a href="{% url 'admin:maja_newsletter_newsletter_changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a> &rsaquo;
-     {{ title }}
-</div>
-{% endif %}
+<style>
+    #changelist-filter .module a {
+        display: inline;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <div id="content-main">
-  {% if period %}
-  <!-- Graph -->
-  <div class="module" id="charts">
-      <div id="charts_view"></div>
-  </div>
-  <div class="module" id="charts_options">
-    <form id="period_selector" action="{% url 'newsletter_newsletter_charts' object.slug %}" method="post">
-      {% csrf_token %}
-      <table summary="{% trans "Consultation histogram" %}">
-	<tr>
-	  <th scope="row" style="vertical-align: middle;">
-	    {% trans "Period" %} :
-	  </th>
-	  <td>
-	    <select name="start">
-	      {% for date in period %}
-	      <option value="{{ forloop.counter0 }}" {% ifequal forloop.counter0 0 %}selected="selected"{% endifequal %}>{{ date|date:"d M Y" }}</option>
-	      {% endfor %}
-	    </select>
-	    <span>-></span>
-	    <select name="end">
-	      {% for date in period %}
-	      <option value="{{ forloop.counter0 }}" {% ifequal forloop.counter0 6 %}selected="selected"{% endifequal %}>{{ date|date:"d M Y" }}</option>
-	      {% endfor %}
-	    </select>
-	  </td>
-	  <td><input type="submit" value="OK" /></td>
-	</tr>
-      </table>
-    </form>
-  </div>
-  {% endif %}
-  <!-- Receptions -->
-  <div class="module" id="reception">
-    <table summary="{% trans "Broadcasting statistics" %}">
-      <caption><a href="#" class="section">{% trans "Broadcasting statistics" %}</a></caption>
-      <tr>
-        <th scope="row">{% trans "Total openings" %}</th>
-	<td>&nbsp;</td>
-        <td>{{ stats.total_openings }}</td>
-      </tr>
-      <tr>
-        <th scope="row">{% trans "Openings on site" %}</th>
-        <td>{{ stats.total_on_site_openings }}</td>
-        <td>{{ stats.unique_on_site_openings }}</td>
-      </tr>
-      <tr>
-        <th scope="row">{% trans "Total openings unique" %}</th>
-        <td>{{ stats.unique_openings }}</td>
-	<td>{{ stats.unique_openings_percent|floatformat:2 }}%</td>
-      </tr>
-      <tr>
-        <th scope="row">{% trans "Unknow delivery" %}</th>
-        <td>{{ stats.unknow_openings }}</td>
-	<td>{{ stats.unknow_openings_percent|floatformat:2 }}%</td>
-      </tr>
-      <tr>
-        <th scope="row">{% trans "Unsubscriptions" %}</th>
-        <td>{{ stats.total_unsubscriptions }}</td>
-	<td>{{ stats.total_unsubscriptions_percent|floatformat:2 }}%</td>
-      </tr>
-      <tr>
-        <th scope="row">{% trans "Openings average" %}</th>
-        <td>&nbsp;</td>
-        <td>{{ stats.opening_average|floatformat:2 }}</td>
-      </tr>
-    </table>
-  </div>
-  <!-- Links -->
-  <div class="module" id="reception">
-    <table summary="{% trans "Links statistics" %}">
-      <caption><a href="#" class="section">{% trans "Links statistics" %}</a></caption>
-      <tr>
-        <th scope="row">{% trans "Total clicked links" %}</th>
-        <td>{{ stats.total_clicked_links }}</td>
-        <td>{{ stats.total_clicked_links_percent|floatformat:2 }}%</td>
-      </tr>
-      <tr>
-        <th scope="row">{% trans "Total clicked links unique" %}</th>
-        <td>{{ stats.unique_clicked_links }}</td>
-        <td>{{ stats.unique_clicked_links_percent|floatformat:2 }}%</td>
-      </tr>
-      <tr>
-        <th scope="row">{% trans "Clicked links by openings" %}</th>
-	<td>&nbsp;</td>
-        <td>{{ stats.clicked_links_by_openings|floatformat:2 }}%</td>
-      </tr>
-      <tr>
-        <th scope="row">{% trans "Clicked links average" %}</th>
-	<td>&nbsp;</td>
-        <td>{{ stats.clicked_links_average|floatformat:2 }}</td>
-      </tr>
-    </table>
-  </div>
-</div>
-{% endblock %}
+  <div class="module filtered" id="changelist">
+      {% block filters %}
+          <div id="changelist-filter">
+            <div class="module" id="report-module">
+                <h2>{% trans "Report" %}</h2>
+                <h3><a href="{% url 'newsletter_newsletter_report' object.slug %}">{% trans "Download CSV report" %}</a></h3>
+            </div>
+            <div class="module" id="general-informations-module">
+                <h2>{% trans "Informations" %}</h2>
+	            <h3>{% trans "Recipients" %}: <a href="{% url 'admin:maja_newsletter_mailinglist_change' object.mailing_list.pk %}">{{ stats.mails_to_send }} {% trans "View" %}</a></h3>
+                <h3>{% trans "Status" %}: {{ object.get_status_display }} {% if stats.remaining_mails %}<span class="mini quiet">(-{{ stats.remaining_mails }})</span>{% endif %}</h3>
+	            <h3>{% trans "Sending date" %}: {{ object.sending_date|date:"d M Y H:i" }}</h3>
+	            {% if stats.tests_sent %}
+	                <h3>{% trans "Tests sent" %}: {{ stats.tests_sent }}</h3>
+	            {% endif %}
+            </div>
+            <div class="module" id="top-links-module">
+	            <h2>{% trans "Top Links" %}
+	            (<a href="{% url 'newsletter_newsletter_density' object.slug %}">{% trans "Density map" %}</a>)
+	            </h2>
+	            <ul class="actionlist">
+	            {% for top_link in stats.top_links %}
+                    <li><a href="{{ top_link.link.url }}" title="{{ top_link.link.title }}" target="blank">{{ top_link.link.title|slice:":23" }}</a>
+                        <span class="quiet">({{ top_link.total_clicks }})</span>
+                        <span class="mini quiet">({{ top_link.unique_clicks }})</span>
+                    </li>
+                {% empty %}
+                	<li>{% trans "No Top Links yet." %}</li>
+	            {% endfor %}
+	            </ul>
+            </div>
+          </div>
+      {% endblock %}
 
-{% block sidebar %}
-<div id="content-related">
-    <div class="module" id="report-module">
-      <h2>{% trans "Report" %}</h2>
-      <h3>
-	<a href="{% url 'newsletter_newsletter_report' object.slug %}">{% trans "Download CSV report" %}</a>
-      </h3>
-      <p></p>
-    </div>
-    <div class="module" id="general-informations-module">
-        <h2>{% trans "Informations" %}</h2>
-	<h3>{% trans "Recipients" %}</h3>
-	<p>{{ stats.mails_to_send }} <a href="{% url 'admin:maja_newsletter_mailinglist_change' object.mailing_list.pk %}">{% trans "View" %}</a></p>
-        <h3>{% trans "Status" %}</h3>
-	<p>{{ object.get_status_display }} {% if stats.remaining_mails %}<span class="mini quiet">(-{{ stats.remaining_mails }})</span>{% endif %}</p>
-	<h3>{% trans "Sending date" %}</h3>
-	<p>{{ object.sending_date|date:"d M Y H:i" }}</p>
-	{% if stats.tests_sent %}
-	<h3>{% trans "Tests sent" %}</h3>
-	<p>{{ stats.tests_sent }}</p>
-	{% endif %}
-    </div>
-    <div class="module" id="top-links-module">
-	<h2>{% trans "Top Links" %}
-	  (<a href="{% url 'newsletter_newsletter_density' object.slug %}">{% trans "Density map" %}</a>)
-	</h2>
-	<ul class="actionlist">
-	{% for top_link in stats.top_links %}
-	<li><a href="{{ top_link.link.url }}" title="{{ top_link.link.title }}" target="blank">{{ top_link.link.title|slice:":23" }}</a>
-	  <span class="quiet">({{ top_link.total_clicks }})</span>
-	  <span class="mini quiet">({{ top_link.unique_clicks }})</span>
-	</li>
-	{% empty %}
-	<li>{% trans "No Top Links yet." %}</li>
-	{% endfor %}
-	</ul>
-    </div>
+      <form id="changelist-form" method="post" novalidate="">
+
+          {% if period %}
+          <!-- Graph -->
+          <div id="charts_view"></div>
+
+          <div class="module" id="charts_options">
+            <form id="period_selector" action="{% url 'newsletter_newsletter_charts' object.slug %}" method="post">
+              {% csrf_token %}
+              <table summary="{% trans "Consultation histogram" %}">
+                <tr>
+                  <th scope="row" style="vertical-align: middle;">
+                    {% trans "Period" %} :
+                  </th>
+                  <td>
+                    <select name="start">
+                      {% for date in period %}
+                      <option value="{{ forloop.counter0 }}" {% ifequal forloop.counter0 0 %}selected="selected"{% endifequal %}>{{ date|date:"d M Y" }}</option>
+                      {% endfor %}
+                    </select>
+                    <span>-></span>
+                    <select name="end">
+                      {% for date in period %}
+                      <option value="{{ forloop.counter0 }}" {% ifequal forloop.counter0 6 %}selected="selected"{% endifequal %}>{{ date|date:"d M Y" }}</option>
+                      {% endfor %}
+                    </select>
+                  </td>
+                  <td><input type="submit" value="OK" /></td>
+                </tr>
+              </table>
+            </form>
+          </div>
+          {% endif %}
+      </form>
+
+      <form id="changelist-form" method="post" novalidate="">
+          <!-- Receptions -->
+          <div class="module" id="reception">
+            <table summary="{% trans "Broadcasting statistics" %}">
+              <caption><a href="#" class="section">{% trans "Broadcasting statistics" %}</a></caption>
+              <tr>
+                <th scope="row">{% trans "Total openings" %}</th>
+                <td>&nbsp;</td>
+                <td>{{ stats.total_openings }}</td>
+              </tr>
+              <tr>
+                <th scope="row">{% trans "Openings on site" %}</th>
+                <td>{{ stats.total_on_site_openings }}</td>
+                <td>{{ stats.unique_on_site_openings }}</td>
+              </tr>
+              <tr>
+                <th scope="row">{% trans "Total openings unique" %}</th>
+                <td>{{ stats.unique_openings }}</td>
+                <td>{{ stats.unique_openings_percent|floatformat:2 }}%</td>
+              </tr>
+              <tr>
+                <th scope="row">{% trans "Unknow delivery" %}</th>
+                <td>{{ stats.unknow_openings }}</td>
+                <td>{{ stats.unknow_openings_percent|floatformat:2 }}%</td>
+              </tr>
+              <tr>
+                <th scope="row">{% trans "Unsubscriptions" %}</th>
+                <td>{{ stats.total_unsubscriptions }}</td>
+                <td>{{ stats.total_unsubscriptions_percent|floatformat:2 }}%</td>
+              </tr>
+              <tr>
+                <th scope="row">{% trans "Openings average" %}</th>
+                <td>&nbsp;</td>
+                <td>{{ stats.opening_average|floatformat:2 }}</td>
+              </tr>
+            </table>
+          </div>
+          <!-- Links -->
+          <div class="module" id="reception">
+            <table summary="{% trans "Links statistics" %}">
+              <caption><a href="#" class="section">{% trans "Links statistics" %}</a></caption>
+              <tr>
+                <th scope="row">{% trans "Total clicked links" %}</th>
+                <td>{{ stats.total_clicked_links }}</td>
+                <td>{{ stats.total_clicked_links_percent|floatformat:2 }}%</td>
+              </tr>
+              <tr>
+                <th scope="row">{% trans "Total clicked links unique" %}</th>
+                <td>{{ stats.unique_clicked_links }}</td>
+                <td>{{ stats.unique_clicked_links_percent|floatformat:2 }}%</td>
+              </tr>
+              <tr>
+                <th scope="row">{% trans "Clicked links by openings" %}</th>
+                <td>&nbsp;</td>
+                <td>{{ stats.clicked_links_by_openings|floatformat:2 }}%</td>
+              </tr>
+              <tr>
+                <th scope="row">{% trans "Clicked links average" %}</th>
+                <td>&nbsp;</td>
+                <td>{{ stats.clicked_links_average|floatformat:2 }}</td>
+              </tr>
+            </table>
+          </div>
+      </form>
+  </div>
 </div>
 {% endblock %}

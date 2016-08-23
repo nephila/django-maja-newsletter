@@ -4,6 +4,8 @@ from urllib import urlencode
 from urlparse import urlparse
 from urlparse import urlunparse
 # For Python < 2.6
+from maja_newsletter.utils import DJANGO_1_7
+
 try:
     from urlparse import parse_qs
 except ImportError:
@@ -33,8 +35,12 @@ def view_newsletter_tracking(request, slug, uidb36, token, format):
     ContactMailingStatus.objects.create(newsletter=newsletter,
                                         contact=contact,
                                         status=ContactMailingStatus.OPENED)
-    return HttpResponse(base64.b64decode(TRACKING_IMAGE),
-                        mimetype='image/%s' % format)
+    if DJANGO_1_7:
+        return HttpResponse(base64.b64decode(TRACKING_IMAGE),
+                            mimetype='image/%s' % format)
+    else:
+        return HttpResponse(base64.b64decode(TRACKING_IMAGE),
+                            content_type='image/%s' % format)
 
 
 def view_newsletter_tracking_link(request, slug, uidb36, token, link_id):
@@ -68,7 +74,12 @@ def view_newsletter_historic(request, slug):
     context = {'title': _('Historic of %s') % newsletter.__unicode__(),
                'original': newsletter,
                'opts': opts,
+               'cl': {'opts': opts},
                'object_id': newsletter.pk,
                'app_label': opts.app_label}
-    return render_to_response('newsletter/newsletter_historic.html',
-                              context, context_instance=RequestContext(request))
+    if DJANGO_1_7:
+        return render_to_response('newsletter/newsletter_historic.html',
+                                  context, context_instance=RequestContext(request))
+    else:
+        return render_to_response('newsletter/newsletter_historic.html',
+                                  RequestContext(request, context))

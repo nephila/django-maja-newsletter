@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django.template.defaultfilters import date
+from maja_newsletter.utils import DJANGO_1_7
 
 from maja_newsletter.utils.ofc import Chart
 from maja_newsletter.models import Newsletter
@@ -54,13 +55,18 @@ def view_newsletter_statistics(request, slug):
     context = {'title': _('Statistics of %s') % newsletter.__unicode__(),
                'object': newsletter,
                'opts': opts,
+               'cl': {'opts': opts},
                'object_id': newsletter.pk,
                'app_label': opts.app_label,
                'stats': get_newsletter_statistics(newsletter),
                'period': get_statistics_period(newsletter)}
 
-    return render_to_response('newsletter/newsletter_statistics.html',
-                              context, context_instance=RequestContext(request))
+    if DJANGO_1_7:
+        return render_to_response('newsletter/newsletter_statistics.html',
+                                  context, context_instance=RequestContext(request))
+    else:
+        return render_to_response('newsletter/newsletter_statistics.html',
+                                  RequestContext(request, context))
 
 
 @login_required
@@ -85,7 +91,10 @@ def view_newsletter_report(request, slug):
         return [smart_str(contact.first_name), smart_str(contact.last_name),
                 smart_str(contact.email), openings] + link_cols
 
-    response = HttpResponse(mimetype='text/csv')
+    if DJANGO_1_7:
+        response = HttpResponse(mimetype='text/csv')
+    else:
+        response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=report-%s.csv' % newsletter.slug
 
     writer = csv.writer(response)
@@ -104,8 +113,12 @@ def view_newsletter_density(request, slug):
     context = {'object': newsletter,
                'top_links': get_newsletter_top_links(status)['top_links']}
 
-    return render_to_response('newsletter/newsletter_density.html',
-                              context, context_instance=RequestContext(request))
+    if DJANGO_1_7:
+        return render_to_response('newsletter/newsletter_density.html',
+                                  context, context_instance=RequestContext(request))
+    else:
+        return render_to_response('newsletter/newsletter_density.html',
+                                  RequestContext(request, context))
 
 
 @login_required

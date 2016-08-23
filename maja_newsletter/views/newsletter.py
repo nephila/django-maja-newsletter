@@ -9,7 +9,7 @@ from django.template.loader import render_to_string as render_file
 
 from maja_newsletter.models import Newsletter
 from maja_newsletter.models import ContactMailingStatus
-from maja_newsletter.utils import render_string
+from maja_newsletter.utils import render_string, DJANGO_1_7
 from maja_newsletter.utils.newsletter import body_insertion
 from maja_newsletter.utils.newsletter import track_links
 from maja_newsletter.utils.tokens import untokenize
@@ -29,11 +29,14 @@ def render_newsletter(request, slug, context):
     unsubscription = render_file('newsletter/newsletter_link_unsubscribe.html', context)
     content = body_insertion(content, unsubscription, end=True)
 
-    return render_to_response('newsletter/newsletter_detail.html',
-                              {'content': content,
-                               'title': title,
-                               'object': newsletter},
-                              context_instance=RequestContext(request))
+    context = {'content': content, 'title': title, 'object': newsletter}
+
+    if DJANGO_1_7:
+        return render_to_response('newsletter/newsletter_detail.html',
+                                  context, context_instance=RequestContext(request))
+    else:
+        return render_to_response('newsletter/newsletter_density.html',
+                                  RequestContext(request, context))
 
 
 @login_required
